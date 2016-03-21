@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">钥匙串</string>
+    <string name="action_language_back">返回</string>
+    <string name="action_language_save">保存</string>
+    <string name="sign_in">登录</string>
+    <string name="sign_in_username_hint">用户名/邮箱/手机号</string>
+    <string name="sign_in_password_hint">密码</string>
+    <string name="sign_in_commit">登陆</string>
+    <string name="sign_in_sign_up">注册</string>
+    <string name="sign_in_language">语言</string>
+    <string name="sign_up_banner">设置账户</string>
+    <string name="sign_up_username_hint">邮箱</string>
+    <string name="sign_up_password_hint">密码</string>
+    <string name="sign_up_back">返回</string>
+    <string name="sign_up_commit">注册</string>
+    <string name="sign_up_contract_pre">我已阅读并同意</string>
+    <string name="sign_up_contract">使用条款和隐私政策</string>
+    <string name="language_chooser_title">选择语言</string>
+    <string name="toast_incorrect_cellphone">手机号错误</string>
+    <string name="toast_username_tip">用户名为6-20个字母和数字组成</string>
+    <string name="toast_illegal_username">无效的用户名</string>
+    <string name="toast_password_tip">密码为6-20个字母和数字组成</string>
+    <string name="toast_sign_in_succeed">登陆成功</string>
+    <string name="toast_invalid_action">无效的账号</string>
+    <string name="toast_internal_error">内部错误</string>
+    <string name="toast_network_error">网络不可访问</string>
+
+    <string name="status_code_ok">成功</string>
+    <string name="status_code_captcha_error">验证码错误</string>
+    <string name="status_code_account_not_exists">账号不存在</string>
+    <string name="status_code_account_exists">账号已注册</string>
+    <string name="status_code_invalid_user">无效的用户</string>
+    <string name="status_code_account_type_not_support">无效的账户类型</string>
+    <string name="status_code_method_error">方法错误</string>
+
+
+    <string name="progress_dialog_message">Please Wait...</string>
+
+    <string name="keychain_domain_name" translatable="false">Http://127.0.0.1/</string>
+
+    <string name="title_activity_keychain_main">Keychain</string>
+    <string name="title_activity_sign_up">SignUp</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>

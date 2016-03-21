@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="Language" translatable="false">language</string>
+    <integer name="Chinese">0</integer>
+    <integer name="English">1</integer>
+
+    <string-array name="Language">
+        <item>简体中文</item>
+        <item>English</item>
+    </string-array>
+</resources>

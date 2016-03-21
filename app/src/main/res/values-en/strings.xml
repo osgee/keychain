@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">Keychain</string>
+    <string name="action_language_back">Back</string>
+    <string name="action_language_save">Save</string>
+    <string name="sign_in">SignIn</string>
+    <string name="sign_in_username_hint">Account/Email/Cellphone</string>
+    <string name="sign_in_password_hint">Password</string>
+    <string name="sign_in_commit">Sign In</string>
+    <string name="sign_in_sign_up">Sign Up</string>
+    <string name="sign_in_language">Language</string>
+    <string name="sign_up_banner">Set Your Account</string>
+    <string name="sign_up_username_hint">Email</string>
+    <string name="sign_up_password_hint">Password</string>
+    <string name="sign_up_back">Back</string>
+    <string name="sign_up_commit">Sign Up</string>
+    <string name="sign_up_contract_pre">I have read and agreed with</string>
+    <string name="sign_up_contract">the User Contract and Privacy Policy</string>
+    <string name="language_chooser_title">Language</string>
+    <string name="toast_incorrect_cellphone">Incorrect Cellphone</string>
+    <string name="toast_username_tip">Username 6-20 Letters and Digits</string>
+    <string name="toast_illegal_username">Illegal Username</string>
+    <string name="toast_password_tip">Password 6-20 Length</string>
+    <string name="toast_sign_in_succeed">Sign In Succeed</string>
+    <string name="toast_invalid_action">Invalid Action</string>
+    <string name="toast_internal_error">Internal Error</string>
+    <string name="toast_network_error">Network Error</string>
+
+    <string name="status_code_ok">Succeed</string>
+    <string name="status_code_captcha_error">Captcha Error</string>
+    <string name="status_code_account_not_exists">Account Not Exists</string>
+    <string name="status_code_account_exists">Account Exists</string>
+    <string name="status_code_invalid_user">Invalid User</string>
+    <string name="status_code_account_type_not_support">Account Type Not Supported</string>
+    <string name="status_code_method_error">Method Error</string>
+
+
+    <string name="progress_dialog_message">Please Wait...</string>
+
+    <string name="keychain_domain_name" translatable="false">Http://127.0.0.1/</string>
+
+    <string name="title_activity_keychain_main">Keychain</string>
+    <string name="title_activity_sign_up">SignUp</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
