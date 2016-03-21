@@ -75,7 +75,8 @@ public class HttpsPostAsync extends AsyncTask<String, String, Object> {
             NoSuchAlgorithmException, KeyManagementException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         //TO DO pubkey should not get from local file but from CA
-        InputStream in = context.getResources().openRawResource(R.raw.taofeng);
+        InputStream in = context.getResources().openRawResource(R.raw.c9users_io);
+//        InputStream in = context.getResources().openRawResource(R.raw.taofeng);
         Certificate ca = cf.generateCertificate(in);
 
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -96,7 +97,7 @@ public class HttpsPostAsync extends AsyncTask<String, String, Object> {
             public boolean verify(String hostname, SSLSession session) {
                 if (hostname.matches("\\d*.\\d*.\\d*.\\d*"))
                     return true;
-                String[] allowedHosts = {"localhost", "superkeychain.com", "www.superkeychain.com"};
+                String[] allowedHosts = {"localhost", "superkeychain.com", "www.superkeychain.com", "keychain-miui.c9users.io"};
                 for (String host : allowedHosts) {
                     if (host.equalsIgnoreCase(hostname))
                         return true;

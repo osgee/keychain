@@ -44,7 +44,7 @@ public abstract class Action {
     //Actions URI
     public static final String PROTOCOl_HTTPS = "https://";
     //    public static final String HOST = "192.168.43.119";
-    public static final String HOST = "192.168.0.100";
+    public static final String HOST = "keychain-miui.c9users.io";
     public static final String ACTION_SIGN_IN = "/keychain/client/user/signin/";
     public static final String ACTION_SIGN_UP = "/keychain/client/user/signup/";
     public static final String ACTION_SIGN_OUT = "/keychain/client/user/signout/";
