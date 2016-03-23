@@ -22,12 +22,13 @@ import com.superkeychain.keychain.repository.UserRepository;
  * Time: 09:01
  * FIXME
  */
-public class BaseFragment extends Fragment implements View.OnClickListener {
-    private Button btnSignOut, btnAccountAdd, btnAccountsGet;
+public class BaseFragment extends Fragment {
+
+   /* private Button btnSignOut, btnAccountAdd, btnAccountsGet;
     private UserRepository userRepository;
     private User user;
 
-    private UserAccountAction userAccountAction;
+    private UserAccountAction userAccountAction;*/
 
     private String title;
     private int iconId;
@@ -51,7 +52,7 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.base_fragment, null, false);
-        btnSignOut = (Button) view.findViewById(R.id.btn_sign_out);
+       /* btnSignOut = (Button) view.findViewById(R.id.btn_sign_out);
         btnAccountAdd = (Button) view.findViewById(R.id.btn_account_add);
         btnAccountsGet = (Button) view.findViewById(R.id.btn_accounts_get);
 
@@ -63,11 +64,11 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
 
         btnSignOut.setOnClickListener(this);
         btnAccountAdd.setOnClickListener(this);
-        btnAccountsGet.setOnClickListener(this);
+        btnAccountsGet.setOnClickListener(this);*/
 
         return view;
     }
-
+/*
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -87,5 +88,5 @@ public class BaseFragment extends Fragment implements View.OnClickListener {
                 break;
 
         }
-    }
+    }*/
 }

@@ -1,6 +1,7 @@
 package com.superkeychain.keychain.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -18,13 +19,14 @@ import com.superkeychain.keychain.repository.UserRepository;
 import com.superkeychain.keychain.view.BaseFragment;
 import com.superkeychain.keychain.view.IconPagerAdapter;
 import com.superkeychain.keychain.view.IconTabPageIndicator;
+import com.superkeychain.keychain.view.MineFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 
-public class KeychainMain extends FragmentActivity {
+public class KeychainMain extends FragmentActivity implements MineFragment.OnFragmentInteractionListener{
 
     private UserRepository userRepository;
     private AppRepository appRepository;
@@ -104,12 +106,17 @@ public class KeychainMain extends FragmentActivity {
         contactFragment.setIconId(R.drawable.tab_user_selector);
         fragments.add(contactFragment);*/
 
-        BaseFragment recordFragment = new BaseFragment();
-        recordFragment.setTitle("我");
+        BaseFragment recordFragment = new MineFragment();
+        recordFragment.setTitle("我的");
         recordFragment.setIconId(R.drawable.tab_user_selector);
         fragments.add(recordFragment);
 
         return fragments;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     class FragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {

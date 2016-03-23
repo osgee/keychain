@@ -1,10 +1,236 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray_background"
     tools:context="com.superkeychain.keychain.view.MineFragment">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_margin="0dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:id="@+id/rl_mine_info"
+        android:background="@color/sky_blue">
+        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:scaleType="fitCenter"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:src="@drawable/logo"
+            app:riv_border_color="@color/sky_blue"
+            app:riv_border_width="1dip"
+            app:riv_corner_radius="0dip"
+            app:riv_mutate_background="true"
+            app:riv_oval="true"
+            app:riv_tile_mode="repeat" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Alexander_the_Great"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_action_next_item"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rl_setting"
+        android:layout_below="@+id/rl_mine_info"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:id="@+id/tv_setting"
+            android:text="设置"
+            android:textColor="@color/dark_gray"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/tv_setting"
+            android:id="@+id/rl_notification"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="推送通知"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tb_notification"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="16dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/rl_update"
+            android:layout_below="@+id/rl_notification"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="版本更新"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rl_others"
+        android:layout_below="@+id/rl_setting"
+        android:layout_marginTop="16dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:id="@+id/tv_others"
+            android:text="其他"
+            android:textColor="@color/dark_gray"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/tv_others"
+            android:id="@+id/rl_manual"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="用户指南"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/rl_lawsuit"
+            android:layout_below="@+id/rl_manual"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="法律条款"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/rl_about_us"
+            android:layout_below="@+id/rl_lawsuit"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="关于钥匙串"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/rl_feedback"
+            android:layout_below="@+id/rl_about_us"
+            android:layout_marginTop="1dp"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="用户反馈"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_sign_out"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_others"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/cube_holo_red_light"
+        android:shadowRadius="@android:integer/config_longAnimTime"
+        android:text="@string/mine_sign_out"
+        android:textColor="@color/white" />
+</RelativeLayout>
 
 </FrameLayout>

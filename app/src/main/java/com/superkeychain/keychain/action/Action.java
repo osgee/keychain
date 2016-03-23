@@ -55,6 +55,11 @@ public abstract class Action {
     public static final String ACTION_UPDATE_ACCOUNT = "/keychain/client/user/account/update/";
     public static final String ACTION_DELETE_ACCOUNT = "/keychain/client/user/account/delete/";
     public static final String ACTION_GET_ALL_APPS = "/keychain/client/user/apps/getall/";
+
+    public static final String ACTION_GET_USER = "/keychain/client/user/get/";
+    public static final String ACTION_SET_USER = "/keychain/client/user/set/";
+
+
     public static final int ACCOUNT_TYPE_USERNAME = 1;
     public static final int ACCOUNT_TYPE_EMAIL = 2;
     public static final int ACCOUNT_TYPE_CELLPHONE = 3;
