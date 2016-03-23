@@ -26,7 +26,7 @@
             android:src="@drawable/logo"
             app:riv_border_color="@color/sky_blue"
             app:riv_border_width="1dip"
-            app:riv_corner_radius="0dip"
+            app:riv_corner_radius="30dip"
             app:riv_mutate_background="true"
             app:riv_oval="true"
             app:riv_tile_mode="repeat" />
@@ -55,6 +55,21 @@
             android:layout_marginRight="16dp"/>
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_mine_info">
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -231,6 +246,10 @@
         android:shadowRadius="@android:integer/config_longAnimTime"
         android:text="@string/mine_sign_out"
         android:textColor="@color/white" />
+
+    </RelativeLayout>
+    </ScrollView>
+    </RelativeLayout>
 </RelativeLayout>
 
 </FrameLayout>
