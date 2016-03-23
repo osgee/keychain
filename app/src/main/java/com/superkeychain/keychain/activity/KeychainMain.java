@@ -15,6 +15,7 @@ import com.superkeychain.keychain.action.UserAppAction;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.repository.AppRepository;
 import com.superkeychain.keychain.repository.UserRepository;
+import com.superkeychain.keychain.view.AccountFragment;
 import com.superkeychain.keychain.view.BaseFragment;
 import com.superkeychain.keychain.view.IconPagerAdapter;
 import com.superkeychain.keychain.view.IconTabPageIndicator;
@@ -89,7 +90,7 @@ public class KeychainMain extends FragmentActivity {
     private List<BaseFragment> initFragments() {
         List<BaseFragment> fragments = new ArrayList<BaseFragment>();
 
-        BaseFragment userFragment = new BaseFragment();
+        BaseFragment userFragment = new AccountFragment();
         userFragment.setTitle("账号");
         userFragment.setIconId(R.drawable.tab_account_selector);
         fragments.add(userFragment);
