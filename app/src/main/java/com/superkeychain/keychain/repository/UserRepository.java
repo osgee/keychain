@@ -22,9 +22,9 @@ public class UserRepository {
     private Context context;
     private SharedPreferences sharedPreferences;
 
-    public UserRepository(Activity activity, Context context) {
+    public UserRepository(Activity activity) {
         this.activity = activity;
-        this.context = context;
+        this.context = activity.getApplicationContext();
         sharedPreferences = this.activity.getPreferences(Context.MODE_PRIVATE);
         if (AES_KEY_USER == null) {
             if (phoneUtils == null) {

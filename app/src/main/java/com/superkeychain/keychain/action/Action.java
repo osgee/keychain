@@ -87,7 +87,7 @@ public abstract class Action {
     public static final int STATUS_CODE_CAPTCHA_ERROR = -6;
     public static final int STATUS_CODE_SIGN_ERROR = -7;
     public static final int STATUS_CODE_COOKIE_ERROR = -8;
-    protected static User user;
+
     protected static PhoneUtils phoneUtils;
     //    protected static int accountType;
     protected static String deviceId;
@@ -95,17 +95,18 @@ public abstract class Action {
     protected static String sim_serial_number;
     protected static String line_1_number;
     protected final InputStream inpub;
+
     protected Activity activity;
     protected Context context;
+    protected User user;
     protected String randomToken;
     protected UserRepository userRepository;
     protected AppRepository appRepository;
     protected PublicKey publicKey;
 
-    public Action(Activity activity, Context context) {
+    public Action(Activity activity) {
         this.activity = activity;
-        this.context = context;
-        user = new User();
+        this.context = activity.getApplication();
         try {
             phoneUtils = phoneUtils == null ? new PhoneUtils(context) : phoneUtils;
             deviceId = deviceId == null ? phoneUtils.getIMEI() : deviceId;
@@ -116,8 +117,14 @@ public abstract class Action {
         }
         aesKey = aesKey == null ? AESUtils.getRandomKey(16) : aesKey;
         randomToken = AESUtils.getRandomKey(8);
-        userRepository = new UserRepository(activity, context);
-        appRepository = new AppRepository(activity, context);
+        userRepository = new UserRepository(activity);
+        User localUser = null;
+        if(this.user==null){
+            if((localUser=userRepository.get())!=null)
+            this.user = localUser;
+            else this.user = new User();
+        }
+        appRepository = new AppRepository(activity);
         inpub = context.getApplicationContext().getResources().openRawResource(R.raw.rsa_public_key);
         try {
             publicKey = RSAUtils.loadPublicKey(inpub);
@@ -155,10 +162,10 @@ public abstract class Action {
         try {
             secureJsonObject.addAttribute(TIME, time);
             secureJsonObject.addAttribute(RANDOM_TOKEN, randomToken);
-            if (user != null) {
+//            if (user != null) {
                 secureJsonObject.addSecureAttribute(USER_ID, user.getId());
                 secureJsonObject.addSecureAttribute(COOKIE, user.getCookie());
-            }
+//            }
             secureJsonObject.addSecureAttribute(AES_KEY, aesKey);
             secureJsonObject.addSecureAttribute(TIME, time);
         } catch (JSONException e) {

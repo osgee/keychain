@@ -1,6 +1,8 @@
 package com.superkeychain.keychain.activity;
 
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,9 +17,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.superkeychain.keychain.R;
+import com.superkeychain.keychain.action.Action;
+import com.superkeychain.keychain.action.ActionFinishedListener;
 import com.superkeychain.keychain.action.UserAction;
+import com.superkeychain.keychain.entity.User;
+import com.superkeychain.keychain.view.ProgressDialogUtil;
 
 
 public class SignIn extends AppCompatActivity implements View.OnClickListener {
@@ -49,7 +56,7 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         etPassword = (EditText) findViewById(R.id.et_password);
         btnSignIn = (Button) findViewById(R.id.btn_sign_in);
         cbShowPassword = (CheckBox) findViewById(R.id.cb_show_password);
-        userAction = new UserAction(this, SignIn.this);
+        userAction = new UserAction(this);
 
         btnSignIn.setOnClickListener(this);
         tvSignUp.setOnClickListener(this);
@@ -158,7 +165,21 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         if (validateSignIn(true)) {
             String username = etUsername.getText().toString();
             String password = etPassword.getText().toString();
-            userAction.signIn(username, password);
+            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(SignIn.this,"Please Wait...");
+            dialog.show();
+            userAction.signIn(username, password, new ActionFinishedListener() {
+                @Override
+                public void doFinished(int status, String message, Object user) {
+                    dialog.dismiss();
+                    Toast.makeText(SignIn.this,message,Toast.LENGTH_SHORT).show();
+                    if(status== Action.STATUS_CODE_OK){
+                        Intent intent = new Intent(SignIn.this, KeychainMain.class);
+                        intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            });
         }
     }
 

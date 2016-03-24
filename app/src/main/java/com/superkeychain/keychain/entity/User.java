@@ -25,6 +25,7 @@ public class User {
     public static final String USER_COOKIE = "user_cookie";
     public static final String USER_COOKIE_EXPIRE_TIME = "user_cookie_time";
     public static final String USER_ACCOUNTS = "user_accounts";
+
     private String id;
     private int type;
     private String name;
@@ -222,6 +223,19 @@ public class User {
 
     @Override
     public String toString() {
+        switch (type){
+            case 1:
+                return name;
+            case 2:
+                return email;
+            case 3:
+                return cellphone;
+            default:
+                return email;
+        }
+    }
+
+    public String toJSONString() {
         return parseToJSON(this).toString();
     }
 }

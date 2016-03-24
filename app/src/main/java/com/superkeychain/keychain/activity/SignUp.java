@@ -1,5 +1,7 @@
 package com.superkeychain.keychain.activity;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -16,7 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.superkeychain.keychain.R;
+import com.superkeychain.keychain.action.Action;
+import com.superkeychain.keychain.action.ActionFinishedListener;
 import com.superkeychain.keychain.action.UserAction;
+import com.superkeychain.keychain.entity.User;
+import com.superkeychain.keychain.view.ProgressDialogUtil;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
@@ -39,7 +45,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         cbAgree = (CheckBox) findViewById(R.id.cb_agree);
         cbShowPassword = (CheckBox) findViewById(R.id.cb_show_password);
         btnSignUp = (Button) findViewById(R.id.btn_sign_up);
-        userAction = new UserAction(this, SignUp.this);
+        userAction = new UserAction(this);
 
         ivBack.setOnClickListener(this);
         tvBack.setOnClickListener(this);
@@ -90,7 +96,18 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                     if (event.getAction() == KeyEvent.ACTION_DOWN) {
                         String username = etUsername.getText().toString();
                         String password = etPassword.getText().toString();
-                        userAction.signUp(username, password);
+                        userAction.signUp(username, password, new ActionFinishedListener() {
+                            @Override
+                            public void doFinished(int status, String message, Object user) {
+                                Toast.makeText(SignUp.this,message,Toast.LENGTH_SHORT).show();
+                                if(status== Action.STATUS_CODE_OK){
+                                    Intent intent = new Intent(SignUp.this, KeychainMain.class);
+                                    intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                        });
                     }
                 }
                 return false;
@@ -113,7 +130,21 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 if (validateSignUp()) {
                     String username = etUsername.getText().toString();
                     String password = etPassword.getText().toString();
-                    userAction.signUp(username, password);
+                    final Dialog dialog = ProgressDialogUtil.createLoadingDialog(SignUp.this,"Please Wait...");
+                    dialog.show();
+                    userAction.signUp(username, password, new ActionFinishedListener() {
+                        @Override
+                        public void doFinished(int status, String message, Object user) {
+                            dialog.dismiss();
+                            Toast.makeText(SignUp.this,message,Toast.LENGTH_SHORT).show();
+                            if(status==Action.STATUS_CODE_OK){
+                                Intent intent = new Intent(SignUp.this, KeychainMain.class);
+                                intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    });
                 }
                 break;
             case R.id.cb_agree:

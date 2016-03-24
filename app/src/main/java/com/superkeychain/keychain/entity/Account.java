@@ -159,6 +159,20 @@ public class Account {
 
     @Override
     public String toString() {
+        switch (accountType.ordinal()){
+            case 1:
+                return username;
+            case 2:
+                return email;
+            case 3:
+                return cellphone;
+            default:
+                return email;
+        }
+    }
+
+
+    public String toJSONString() {
         return parseToJSON(this).toString();
     }
 

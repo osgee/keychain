@@ -27,12 +27,11 @@ import java.util.List;
  */
 public class UserAppAction extends Action {
 
-    public UserAppAction(Activity activity, Context context, User user) {
-        super(activity, context);
-        Action.user = user;
+    public UserAppAction(Activity activity) {
+        super(activity);
     }
 
-    public void getAllApps() {
+    public void getAllApps(final ActionFinishedListener actionFinishedListener) {
 
         SecureJsonObject secureJsonObject = getRawSecureJsonObject();
         try {
@@ -48,7 +47,7 @@ public class UserAppAction extends Action {
             public void doHttpsFinished(Object object) {
                 if (object != null) {
                     List<ThirdPartApp> apps = (List<ThirdPartApp>) object;
-                    List<String> appsName = new ArrayList<String>();
+                   /* List<String> appsName = new ArrayList<String>();
                     if (apps != null && apps.size() > 0) {
                         for (ThirdPartApp app : apps) {
                             appsName.add(app.getAppName());
@@ -65,7 +64,9 @@ public class UserAppAction extends Action {
                         AccountCase a = (AccountCase) activity;
                         a.setApps(apps);
 
-                    }
+                    }*/
+
+                    actionFinishedListener.doFinished(statusCode,message,apps);
                 }
             }
 

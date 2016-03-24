@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.superkeychain.keychain.R;
+import com.superkeychain.keychain.action.Action;
+import com.superkeychain.keychain.action.ActionFinishedListener;
 import com.superkeychain.keychain.action.UserAccountAction;
 import com.superkeychain.keychain.action.UserAppAction;
 import com.superkeychain.keychain.entity.Account;
@@ -84,8 +86,8 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
         apps = new ArrayList<>();
         String appJSONString = intent.getStringExtra(ThirdPartApp.APPS_KEY);
 
-        userAccountAction = new UserAccountAction(this, AccountCase.this, user);
-        userAppAction = new UserAppAction(this, AccountCase.this, user);
+        userAccountAction = new UserAccountAction(this);
+        userAppAction = new UserAppAction(this);
 
         if (account != null) {
             setMode(MODE_REVISE);
@@ -131,7 +133,11 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
         } else {
             setMode(MODE_ADD);
             account = new Account();
-            userAppAction.getAllApps();
+            userAppAction.getAllApps(new ActionFinishedListener() {
+                @Override
+                public void doFinished(int status, String message, Object object) {
+                }
+            });
         }
 
 
@@ -319,7 +325,16 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
 
     private void deleteAccount() {
         if (mode == MODE_REVISE) {
-            userAccountAction.deleteAccount(account);
+            userAccountAction.deleteAccount(account, new ActionFinishedListener() {
+
+                @Override
+                public void doFinished(int status, String message, Object object) {
+                    Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
+                    if (status==Action.STATUS_CODE_OK){
+                        finish();
+                    }
+                }
+            });
         }
     }
 
@@ -348,7 +363,16 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
                 account.setEmail(email);
                 account.setCellphone(cellphone);
 
-                userAccountAction.updateAccount(account);
+                userAccountAction.updateAccount(account, new ActionFinishedListener() {
+
+                    @Override
+                    public void doFinished(int status, String message, Object object) {
+                        Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
+                        if(status== Action.STATUS_CODE_OK){
+                            finish();
+                        }
+                    }
+                });
             } else {
                 Toast.makeText(AccountCase.this, "Not Changed", Toast.LENGTH_SHORT).show();
             }
@@ -384,7 +408,16 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
             if (!"".equals(cellphone)) {
                 account.setCellphone(cellphone);
             }
-            userAccountAction.addAccount(account);
+            userAccountAction.addAccount(account, new ActionFinishedListener() {
+                @Override
+                public void doFinished(int status, String message, Object object) {
+                    Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
+                    if (status == 1) {
+                        finish();
+                        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
+                    }
+                }
+            });
         }
     }
 

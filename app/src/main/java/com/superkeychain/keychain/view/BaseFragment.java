@@ -1,9 +1,9 @@
 package com.superkeychain.keychain.view;
 
-import android.content.Intent;
+import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +11,6 @@ import android.widget.Button;
 
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.action.UserAccountAction;
-import com.superkeychain.keychain.action.UserAction;
-import com.superkeychain.keychain.activity.AccountCase;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.repository.UserRepository;
 
@@ -22,13 +20,13 @@ import com.superkeychain.keychain.repository.UserRepository;
  * Time: 09:01
  * FIXME
  */
-public class BaseFragment extends Fragment {
+public class BaseFragment extends ListFragment{
 
-   /* private Button btnSignOut, btnAccountAdd, btnAccountsGet;
+    private Button btnSignOut, btnAccountAdd, btnAccountsGet;
     private UserRepository userRepository;
     private User user;
 
-    private UserAccountAction userAccountAction;*/
+    private UserAccountAction userAccountAction;
 
     private String title;
     private int iconId;
@@ -51,15 +49,16 @@ public class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.base_fragment, null, false);
-       /* btnSignOut = (Button) view.findViewById(R.id.btn_sign_out);
+        View view = inflater.inflate(R.layout.fragment_base, null, false);
+
+   /*   btnSignOut = (Button) view.findViewById(R.id.btn_sign_out);
         btnAccountAdd = (Button) view.findViewById(R.id.btn_account_add);
         btnAccountsGet = (Button) view.findViewById(R.id.btn_accounts_get);
 
         userRepository = new UserRepository(BaseFragment.this.getActivity(), BaseFragment.this.getContext());
         user = userRepository.get();
 
-        userAccountAction = new UserAccountAction(BaseFragment.this.getActivity(), BaseFragment.this.getContext(), user);
+        userAccountAction = new UserAccountAction(BaseFragment.this.getActivity());
 
 
         btnSignOut.setOnClickListener(this);
@@ -68,13 +67,17 @@ public class BaseFragment extends Fragment {
 
         return view;
     }
-/*
-    @Override
+  /*  @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_sign_out:
-                UserAction userAction = new UserAction(BaseFragment.this.getActivity(), BaseFragment.this.getContext());
-                userAction.signOut(user);
+               *//* UserAction userAction = new UserAction(BaseFragment.this.getActivity());
+                userAction.signOut(user, new ActionFinishedListener() {
+                    @Override
+                    public void doFinished(int status, String message, Object object) {
+                        Toast.makeText(BaseFragment.this.getActivity().getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                    }
+                });*//*
                 break;
             case R.id.btn_account_add:
                 Intent intentAccountAdd = new Intent(BaseFragment.this.getContext(), AccountCase.class);
@@ -89,4 +92,5 @@ public class BaseFragment extends Fragment {
 
         }
     }*/
+
 }

@@ -23,9 +23,9 @@ public class AppRepository {
     private String APP_KEY = "apps";
     private SharedPreferences sharedPreferences;
 
-    public AppRepository(Activity activity, Context context) {
+    public AppRepository(Activity activity) {
         this.activity = activity;
-        this.context = context;
+        this.context = activity.getApplicationContext();
         sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
     }
 

@@ -28,8 +28,8 @@ import java.util.List;
  * Created by taofeng on 3/15/16.
  */
 public class UserAction extends Action {
-    public UserAction(Activity activity, Context context) {
-        super(activity, context);
+    public UserAction(Activity activity) {
+        super(activity);
     }
 
     public boolean validateInput(String username, String password, boolean showToast) {
@@ -73,7 +73,7 @@ public class UserAction extends Action {
     }
 
 
-    public void signIn(String username, String password) {
+    public void signIn(String username, String password, final ActionFinishedListener actionFinishedListener) {
         /**
          *
          * first sign in
@@ -98,8 +98,8 @@ public class UserAction extends Action {
 
         if (!validateInput(username, password, true))
             return;
-        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-        dialog.show();
+//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
+//        dialog.show();
 
         try {
             SecureJsonObject requestJsonObject = getRawSecureJsonObject();
@@ -155,14 +155,15 @@ public class UserAction extends Action {
                 @Override
                 public void doHttpsFinished(Object user) {
                     super.doHttpsFinished(user);
-                    dialog.dismiss();
-                    if (user != null && user instanceof User) {
-                        Intent intent = new Intent(context, KeychainMain.class);
+//                    dialog.dismiss();
+//                    if (user != null && user instanceof User) {
+                        /*Intent intent = new Intent(context, KeychainMain.class);
                         intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
-                        context.startActivity(intent);
-                        activity.finish();
+                        context.startActivity(intent);*/
+//                        activity.finish();
+//                    }
+                    actionFinishedListener.doFinished(statusCode,message,user);
 
-                    }
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_SIGN_IN), requestJsonString, aesKey);
 
@@ -172,11 +173,11 @@ public class UserAction extends Action {
     }
 
 
-    public void signUp(String username, String password) {
+    public void signUp(String username, String password, final ActionFinishedListener actionFinishedListener) {
         if (!validateInput(username, password, true))
             return;
-        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-        dialog.show();
+//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
+//        dialog.show();
         try {
             SecureJsonObject requestJsonObject = getRawSecureJsonObject();
             requestJsonObject.addAttribute(ACCOUNT_TYPE, user.getType());
@@ -255,13 +256,14 @@ public class UserAction extends Action {
                 @Override
                 public void doHttpsFinished(Object user) {
                     super.doHttpsFinished(user);
-                    dialog.dismiss();
-                    if (user != null && user instanceof User) {
+//                    dialog.dismiss();
+                   /* if (user != null && user instanceof User) {
                         Intent intent = new Intent(context, KeychainMain.class);
                         intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
                         activity.startActivity(intent);
                         activity.finish();
-                    }
+                    }*/
+                    actionFinishedListener.doFinished(statusCode,message,user);
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_SIGN_UP), requestJsonString, aesKey);
 
@@ -270,10 +272,7 @@ public class UserAction extends Action {
         }
     }
 
-    public int checkCookie(User userIn) {
-        int statusCode = 0;
-        user = userIn;
-        Object httpsOut = null;
+    public void checkCookie(final ActionFinishedListener actionFinishedListener) {
         try {
             SecureJsonObject secureJsonObject = getRawSecureJsonObject();
             try {
@@ -282,20 +281,22 @@ public class UserAction extends Action {
                 e.printStackTrace();
             }
             String request = secureJsonObject.toString();
-            httpsOut = new HttpsPostAsync(context).setHttpsCustomListener(new HttpsPostAsync.HttpsCustomListener() {
-            }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_CHECK_COOKIE), request, aesKey).get();
+            new HttpsPostAsync(context).setHttpsCustomListener(new HttpsPostAsync.HttpsCustomListener() {
+                @Override
+                public void doHttpsFinished(Object object) {
+                    super.doHttpsFinished(object);
+                    actionFinishedListener.doFinished(statusCode,message,object);
+
+                }
+            }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_CHECK_COOKIE), request, aesKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (httpsOut == null)
-            statusCode = 0;
-        else statusCode = (int) httpsOut;
-        return statusCode;
+
     }
 
-    public void signOut(User userIn) {
-        user = userIn;
-        userRepository.delete();
+    public void signOut(final ActionFinishedListener actionFinishedListener) {
+
         SecureJsonObject secureJsonObject = getRawSecureJsonObject();
         try {
             secureJsonObject.addAttribute(ACCOUNT_TYPE, ACCOUNT_TYPE_COOKIE);
@@ -304,10 +305,13 @@ public class UserAction extends Action {
         }
         String request = secureJsonObject.toString();
         new HttpsPostAsync(context).setHttpsCustomListener(new HttpsPostAsync.HttpsCustomListener() {
+            @Override
+            public void doHttpsFinished(Object object) {
+                super.doHttpsFinished(object);
+                actionFinishedListener.doFinished(statusCode,message,object);
+            }
         }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_SIGN_OUT), request, aesKey);
-        Intent intent = new Intent(activity, SignIn.class);
-        activity.startActivity(intent);
-        activity.finish();
+        userRepository.delete();
     }
 
     public int getAccountType() {
