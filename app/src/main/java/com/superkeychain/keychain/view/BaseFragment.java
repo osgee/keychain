@@ -3,7 +3,7 @@ package com.superkeychain.keychain.view;
 import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +20,7 @@ import com.superkeychain.keychain.repository.UserRepository;
  * Time: 09:01
  * FIXME
  */
-public class BaseFragment extends ListFragment{
+public class BaseFragment extends Fragment{
 
     private Button btnSignOut, btnAccountAdd, btnAccountsGet;
     private UserRepository userRepository;

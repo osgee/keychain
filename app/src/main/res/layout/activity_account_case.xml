@@ -90,6 +90,7 @@
                 android:ems="10"
                 android:hint="@string/account_password_hint"
                 android:inputType="textPassword"
+                android:singleLine="true"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:textColorHint="@color/gray_hint" />
@@ -141,6 +142,7 @@
             android:layout_height="40dp"
             android:layout_below="@+id/et_email"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="1dp"
             android:background="@color/white"
             android:elegantTextHeight="true"
             android:hint="@string/cellphone_hint"

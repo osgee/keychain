@@ -37,6 +37,7 @@ public class UserRepository {
 
     public void save(User user) {
         try {
+            Log.d("userRepositorySave", User.parseToJSON(user).toString());
             String userCrypto = AESUtils.encrypt(AES_KEY_USER, User.parseToJSON(user).toString());
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(KEY, userCrypto);

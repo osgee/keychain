@@ -4,13 +4,85 @@
     android:layout_height="match_parent"
     android:background="#eee"
     tools:context=".MyActivity">
-
     <RelativeLayout
-        android:id="@+id/rl_bar"
+        android:id="@+id/rl_bar_empty"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:background="@color/sky_blue">
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bar_account"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/sky_blue">
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:text="Account"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_account_add"
+            android:src="@mipmap/ic_action_add"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_bar_scan"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/sky_blue"
+        android:visibility="invisible">
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:text="Scan"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_bar_mine"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/sky_blue"
+        android:visibility="visible">
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:text="Mine"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_notification"
+            android:src="@mipmap/ic_action_bell"
+            android:layout_marginEnd="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_settings"
+            android:src="@mipmap/ic_action_gear"
+            android:layout_marginEnd="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 
@@ -18,7 +90,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_bar">
+        android:layout_below="@id/rl_bar_empty">
 
         <com.superkeychain.keychain.view.IconTabPageIndicator
             android:id="@+id/indicator"

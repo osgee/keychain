@@ -1,47 +1,61 @@
 package com.superkeychain.keychain.view;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.superkeychain.keychain.R;
+import com.superkeychain.keychain.activity.AccountCase;
 import com.superkeychain.keychain.entity.Account;
 import com.superkeychain.keychain.entity.AccountContent;
+import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
-import com.superkeychain.keychain.view.dummy.DummyContent;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A fragment representing a list of Items.
- * <p/>
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
- * interface.
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link AccountFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link AccountFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
 public class AccountFragment extends BaseFragment {
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String JSON_USER = "UserJsonString";
-
+    private static final String JSON_USER = "JSON_USER";
 
     // TODO: Rename and change types of parameters
     private String mJsonUser;
+    private User mUser;
+    private List<Account> accounts;
+
+    ListView listView;
+    BaseAdapter adapter;
 
 
     private OnFragmentInteractionListener mListener;
 
-    // TODO: Rename and change types of parameters
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param jsonUser Parameter 1.
+     * @return A new instance of fragment AccountFragment.
+     */
+    // TODO: Rename and change types and number of parameters
     public static AccountFragment newInstance(String jsonUser) {
         AccountFragment fragment = new AccountFragment();
         Bundle args = new Bundle();
@@ -50,76 +64,121 @@ public class AccountFragment extends BaseFragment {
         return fragment;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public AccountFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-/*
         if (getArguments() != null) {
             mJsonUser = getArguments().getString(JSON_USER);
+            mUser = User.parseFromJSON(mJsonUser);
+            if(mUser!=null&&mUser.getAccounts()!=null&&mUser.getAccounts().size()>0){
+                accounts = mUser.getAccounts();
+            }else{
+                accounts = new ArrayList<>();
+            }
         }
-        User user = User.parseFromJSON(mJsonUser);
-        List<Account> accounts =null;
-        if(user.getAccounts()!=null && user.getAccounts().size()>1){
-            accounts = user.getAccounts();
-        }else{
-            accounts = new ArrayList<>();
-        }
-
-        AccountContent.addAccounts(accounts);*/
-
-        List<Account> accounts1 = new ArrayList<>();
-        Account account1 = new Account();
-        account1.setAccountId("123456");
-        account1.setAccountType(Account.AccountType.USERNAME);
-        account1.setUsername("taofeng");
-        accounts1.add(account1);
-
-
-        // TODO: Change Adapter to display your content
-        setListAdapter(new AccountArrayAdapter(getActivity(),
-                R.layout.account_view,  accounts1));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_account_list_view,null,false);
-        ListView listView = (ListView) view.findViewById(android.R.id.list);
-  /*      if (getArguments() != null) {
-            mJsonUser = getArguments().getString(JSON_USER);
-        }
-        User user = User.parseFromJSON(mJsonUser);
-        List<Account> accounts =null;
-        if(user.getAccounts()!=null && user.getAccounts().size()>1){
-            accounts = user.getAccounts();
-        }else{
-            accounts = new ArrayList<>();
-        }
-*/
-        List<Account> accounts1 = new ArrayList<>();
-        Account account1 = new Account();
-        account1.setAccountId("123456");
-        account1.setAccountType(Account.AccountType.USERNAME);
-        account1.setUsername("taofeng");
-        accounts1.add(account1);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view =  inflater.inflate(R.layout.fragment_account, container, false);
+         listView = (ListView) view.findViewById(R.id.list);
+//        AccountContent.accounts=accounts;
+        adapter = new AccountArrayAdapter(getActivity(),
+                R.layout.account_view, accounts);
+        listView.setAdapter(adapter);
+//        listView.setFocusable(false);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//        AccountContent.addAccounts(accounts);
-        AccountContent.addAccounts(accounts1);
-
-
-        // TODO: Change Adapter to display your content
-
-        listView.setAdapter(new AccountArrayAdapter(getActivity(),
-                R.layout.account_view, AccountContent.accounts));
-
+                Account a = accounts.get(position);
+                Intent intent = new Intent(AccountFragment.this.getActivity(), AccountCase.class);
+                intent.putExtra(User.USER_KEY, mUser.toJSONString());
+                intent.putExtra(Account.ACCOUNT_KEY, a.toJSONString());
+                startActivityForResult(intent, AccountCase.MODE_REVISE);
+            }
+        });
         return view;
+    }
+
+
+
+    public void refreshAccounts(List<Account> accounts){
+        if(accounts!=null&&adapter!=null){
+//            this.accounts = accounts;
+            this.accounts.clear();
+            this.accounts.addAll(accounts);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
+        super.onResume();
+    }
+
+    public void addRefreshAccounts(Account account){
+        if(account!=null&&adapter!=null){
+//            this.accounts = accounts;
+//            this.accounts.clear();
+            this.accounts.add(account);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void delRefreshAccounts(Account account) {
+        if(account!=null&&adapter!=null){
+//            this.accounts = accounts;
+//            this.accounts.clear();
+            int i;
+            boolean isExist = false;
+            for(i=0;i<this.accounts.size();i++){
+                if(account.getAccountId()!=null&&account.getAccountId().equals(this.accounts.get(i).getAccountId())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if(isExist){
+                this.accounts.remove(i);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    public void updateRefreshAccounts(Account account) {
+        if(account!=null&&adapter!=null){
+//            this.accounts = accounts;
+//            this.accounts.clear();
+            int i;
+            boolean isExist = false;
+            for(i=0;i<this.accounts.size();i++){
+                if(account.getAccountId()!=null&&account.getAccountId().equals(this.accounts.get(i).getAccountId())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if(isExist){
+                this.accounts.remove(i);
+                this.accounts.add(account);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
     }
 
     @Override
@@ -139,16 +198,8 @@ public class AccountFragment extends BaseFragment {
         mListener = null;
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
 
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(AccountContent.getAccount(position).getAccountId());
-        }
-    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -162,7 +213,7 @@ public class AccountFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void onFragmentInteraction(Uri uri);
     }
 
 }

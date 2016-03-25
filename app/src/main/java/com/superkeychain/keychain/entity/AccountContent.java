@@ -30,6 +30,13 @@ public class AccountContent {
             addAccount(account);
         }
     }
+    public static void setAccounts(List<Account> accounts){
+        accounts = new ArrayList<>();
+        accountsMap = new HashMap<>();
+        for (Account account:accounts) {
+            addAccount(account);
+        }
+    }
 
     public static void addAccount(Account account){
         accounts.add(account);
@@ -38,6 +45,7 @@ public class AccountContent {
     public static Account getAccount(String id){
         return accountsMap.get(id);
     }
+
     public static Account getAccount(int position){
         if(position<accounts.size()){
             return accounts.get(position);

@@ -278,5 +278,7 @@ public class IconTabPageIndicator extends LinearLayout implements PageIndicator 
             return mIndex;
         }
     }
+
+
 }
 

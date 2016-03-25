@@ -27,6 +27,10 @@ import java.util.List;
  */
 public class UserAppAction extends Action {
 
+    public UserAppAction(Activity activity,User user) {
+        super(activity);
+        this.user = user;
+    }
     public UserAppAction(Activity activity) {
         super(activity);
     }

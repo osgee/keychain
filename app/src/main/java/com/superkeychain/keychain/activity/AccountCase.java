@@ -1,5 +1,6 @@
 package com.superkeychain.keychain.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import com.superkeychain.keychain.entity.Account;
 import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.utils.InputValidateUtils;
+import com.superkeychain.keychain.view.ProgressDialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,8 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountCase extends AppCompatActivity implements View.OnClickListener {
-    private static final int MODE_ADD = 1;
-    private static final int MODE_REVISE = 2;
+    public static final int MODE_ADD = 1;
+    public static final int MODE_REVISE = 2;
+    public static final int ACCOUNT_CASE_ADD_SUCCEED = 1;
+    public static final int ACCOUNT_CASE_DELETE_SUCCEED = 2;
+    public static final int ACCOUNT_CASE_UPDATE_SUCCEED = 3;
     private ImageView ivBack;
     private Button btnAccountAdd, btnAccountUpdate, btnAccountDelete;
     private TextView tvBack, tvContract;
@@ -81,13 +86,15 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
 
 
         Intent intent = getIntent();
+
+
         user = User.parseFromJSON(intent.getStringExtra(User.USER_KEY));
         account = Account.parseFromJSON(intent.getStringExtra(Account.ACCOUNT_KEY));
         apps = new ArrayList<>();
-        String appJSONString = intent.getStringExtra(ThirdPartApp.APPS_KEY);
+//        String appJSONString = intent.getStringExtra(ThirdPartApp.APPS_KEY);
 
-        userAccountAction = new UserAccountAction(this);
-        userAppAction = new UserAppAction(this);
+        userAccountAction = new UserAccountAction(this,user);
+        userAppAction = new UserAppAction(this,user);
 
         if (account != null) {
             setMode(MODE_REVISE);
@@ -101,47 +108,62 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
             btnAccountAdd.setVisibility(View.INVISIBLE);
             btnAccountUpdate.setVisibility(View.VISIBLE);
             btnAccountDelete.setVisibility(View.VISIBLE);
-            if (appJSONString != null) {
-                try {
-                    JSONArray appsJSON = new JSONArray(appJSONString);
-                    for (int i = 0; i < appsJSON.length(); i++) {
-                        ThirdPartApp app = ThirdPartApp.parseFromJSON((JSONObject) appsJSON.get(i));
-                        apps.add(app);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (apps != null && apps.size() > 0) {
-                    List<String> appsName = new ArrayList<String>();
-                    if (apps != null && apps.size() > 0) {
-                        for (ThirdPartApp app : apps) {
-                            appsName.add(app.getAppName());
-                        }
+            userAppAction.getAllApps(new ActionFinishedListener() {
+                @Override
+                public void doFinished(int status, String message, Object appsObject) {
+                    if(status==Action.STATUS_CODE_OK){
+                        apps = (List<ThirdPartApp>) appsObject;
+                        List<String> appsName = new ArrayList<String>();
+                        if (apps != null && apps.size() > 0) {
+                            for (ThirdPartApp app : apps) {
+                                appsName.add(app.getAppName());
+                            }
+                            //适配器
+                            ArrayAdapter<String> adapterApps = new ArrayAdapter<String>(AccountCase.this, android.R.layout.simple_spinner_item, appsName) {
 
-                        ArrayAdapter<String> adapterApps = new ArrayAdapter<String>(AccountCase.this, android.R.layout.simple_spinner_item, appsName) {
-                        };
-                        adapterApps.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerApps.setAdapter(adapterApps);
+                            };
+                            //设置样式
+                            adapterApps.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            //加载适配器
+                            spinnerApps.setAdapter(adapterApps);
+                        }
 
                         if (!(account.getApp() == null)) {
                             spinnerApps.setSelection(getAppPosition(account.getApp().getAppId()));
-
+                            spinnerPosition = spinnerApps.getSelectedItemPosition();
                         }
+
                     }
+
+
                 }
-            }
+            });
+
         } else {
             setMode(MODE_ADD);
             account = new Account();
             userAppAction.getAllApps(new ActionFinishedListener() {
                 @Override
-                public void doFinished(int status, String message, Object object) {
+                public void doFinished(int status, String message, Object appsObject) {
+                    apps = (List<ThirdPartApp>) appsObject;
+                      List<String> appsName = new ArrayList<String>();
+                    if (apps != null && apps.size() > 0) {
+                        for (ThirdPartApp app : apps) {
+                            appsName.add(app.getAppName());
+                        }
+                        //适配器
+                        ArrayAdapter<String> adapterApps = new ArrayAdapter<String>(AccountCase.this, android.R.layout.simple_spinner_item, appsName) {
+
+                        };
+                        //设置样式
+                        adapterApps.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        //加载适配器
+                        spinnerApps.setAdapter(adapterApps);
+                    }
+
                 }
             });
         }
-
-
-        spinnerPosition = spinnerApps.getSelectedItemPosition();
 
         ivBack.setOnClickListener(this);
         tvBack.setOnClickListener(this);
@@ -270,6 +292,7 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
 
         isInputValid = isInputValid && ("".equals(email) || InputValidateUtils.isEmail(email));
         isInputValid = isInputValid && ("".equals(cellphone) || InputValidateUtils.isCellphone(cellphone));
+        isInputValid = isInputValid && apps!=null&&spinnerApps!=null&&spinnerApps.getSelectedItemPosition()>=0&&spinnerApps.getSelectedItemPosition()<apps.size();
 
         if (isInputValid) {
             btnAccountAdd.setBackgroundResource(R.color.sky_blue);
@@ -325,22 +348,33 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
 
     private void deleteAccount() {
         if (mode == MODE_REVISE) {
+            btnAccountDelete.setClickable(false);
+            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this,"Please Wait...");
+            dialog.show();
             userAccountAction.deleteAccount(account, new ActionFinishedListener() {
 
                 @Override
                 public void doFinished(int status, String message, Object object) {
+                    dialog.dismiss();
                     Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
                     if (status==Action.STATUS_CODE_OK){
+                        Intent intent = new Intent();
+                        Account account = (Account) object;
+                        intent.putExtra(Account.ACCOUNT_KEY,account.toJSONString());
+                        setResult(ACCOUNT_CASE_DELETE_SUCCEED,intent);
                         finish();
                     }
                 }
             });
         }
+        btnAccountDelete.setClickable(true);
     }
 
     private void updateAccount() {
         if (mode == MODE_REVISE && validateInput(true)) {
             if (getIsChanged()) {
+                btnAccountUpdate.setClickable(false);
+
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
                 String email = etEmail.getText().toString();
@@ -350,8 +384,9 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
                 account.setPassword(password);
                 account.setUser(user);
                 Log.d("selected", "" + spinnerApps.getSelectedItemPosition());
-                if (apps != null)
+                if (apps != null) {
                     account.setApp(apps.get(spinnerApps.getSelectedItemPosition()));
+                }
                 if (InputValidateUtils.isCellphone(username)) {
                     account.setAccountType(Account.AccountType.CELLPHONE);
                 } else if (InputValidateUtils.isEmail(username)) {
@@ -363,12 +398,19 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
                 account.setEmail(email);
                 account.setCellphone(cellphone);
 
+                final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this,"Please Wait...");
+                dialog.show();
                 userAccountAction.updateAccount(account, new ActionFinishedListener() {
 
                     @Override
                     public void doFinished(int status, String message, Object object) {
+                        dialog.dismiss();
                         Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
                         if(status== Action.STATUS_CODE_OK){
+                            Intent intent = new Intent();
+                            Account account = (Account)object;
+                            intent.putExtra(Account.ACCOUNT_KEY,account.toJSONString());
+                            setResult(ACCOUNT_CASE_UPDATE_SUCCEED,intent);
                             finish();
                         }
                     }
@@ -377,10 +419,12 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(AccountCase.this, "Not Changed", Toast.LENGTH_SHORT).show();
             }
         }
+        btnAccountUpdate.setClickable(true);
     }
 
     private void addAccount() {
         if (mode == MODE_ADD && validateInput(true)) {
+            btnAccountAdd.setClickable(false);
             String username = etUsername.getText().toString();
             String password = etPassword.getText().toString();
             String email = etEmail.getText().toString();
@@ -408,17 +452,27 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
             if (!"".equals(cellphone)) {
                 account.setCellphone(cellphone);
             }
+            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this,"Please Wait...");
+            dialog.show();
             userAccountAction.addAccount(account, new ActionFinishedListener() {
                 @Override
                 public void doFinished(int status, String message, Object object) {
-                    Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    if(!"".equals(message)) {
+                        Toast.makeText(AccountCase.this, message, Toast.LENGTH_SHORT).show();
+                    }
                     if (status == 1) {
+                        Account account = (Account) object;
+                        Intent intent = new Intent();
+                        intent.putExtra(Account.ACCOUNT_KEY,account.toJSONString());
+                        setResult(ACCOUNT_CASE_ADD_SUCCEED, intent);
                         finish();
                         overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
                     }
                 }
             });
         }
+        btnAccountAdd.setClickable(true);
     }
 
     private int getAppPosition(String appId) {

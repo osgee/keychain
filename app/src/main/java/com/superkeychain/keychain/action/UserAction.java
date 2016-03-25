@@ -104,7 +104,6 @@ public class UserAction extends Action {
         try {
             SecureJsonObject requestJsonObject = getRawSecureJsonObject();
             requestJsonObject.addAttribute(ACCOUNT_TYPE, user.getType());
-
             requestJsonObject.addSecureAttribute(USERNAME, user.getName());
             requestJsonObject.addSecureAttribute(PASSWORD, user.getPassword());
             requestJsonObject.addSecureAttribute(DEVICE_ID, deviceId);
@@ -143,6 +142,7 @@ public class UserAction extends Action {
                                 apps.add(app);
                             }
                         }
+//                        userRepository.save(user);
                         appRepository.saveApps(apps);
                         Log.d("response", User.parseToJSON(user).toString());
                     } catch (JSONException e) {
@@ -213,14 +213,12 @@ public class UserAction extends Action {
                 @Override
                 public Object doHttpsResponse(String response) {
                     String responseData = (String) super.doHttpsResponse(response);
-                    Log.d("response", responseData);
                     User user = null;
                     JSONObject responseJSONObject = null;
                     try {
                         JSONObject dataJSONObject = new JSONObject(responseData);
                         String userJSONString = dataJSONObject.getString(USER_KEY);
                         user = User.parseFromJSON(userJSONString);
-                        Log.d("response", User.parseToJSON(user).toString());
 
                         String accountsJSONString = dataJSONObject.getString(ACCOUNTS_KEY);
                         JSONArray accountsJSON = new JSONArray(accountsJSONString);
@@ -245,7 +243,6 @@ public class UserAction extends Action {
                             }
                         }
                         appRepository.saveApps(apps);
-                        Log.d("response", User.parseToJSON(user).toString());
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -318,7 +315,71 @@ public class UserAction extends Action {
         return user.getType();
     }
 
+    public void getUser(final ActionFinishedListener actionFinishedListener){
+        SecureJsonObject secureJsonObject = getRawSecureJsonObject();
+        try {
+            secureJsonObject.addAttribute(ACCOUNT_TYPE,ACCOUNT_TYPE_COOKIE);
+            secureJsonObject.addSecureAttribute(USERNAME, user.getAccountName());
+            secureJsonObject.addSecureAttribute(PASSWORD, user.getPassword());
+            secureJsonObject.addSecureAttribute(DEVICE_ID, deviceId);
+            String request = secureJsonObject.toString();
+            new HttpsPostAsync(context).setHttpsCustomListener(new HttpsPostAsync.HttpsCustomListener() {
+                @Override
+                public void doHttpsFinished(Object userObject) {
+                    super.doHttpsFinished(userObject);
+                    if(userObject!=null){
+                        user = (User) userObject;
+                        actionFinishedListener.doFinished(statusCode,message,user);
+                    }
+                    actionFinishedListener.doFinished(statusCode,message,null);
+                }
+                @Override
+                public Object doHttpsResponse(String response) {
+                    String responseData = (String) super.doHttpsResponse(response);
+                    if(statusCode==STATUS_CODE_OK){
+                        User user = null;
+                        JSONObject responseJSONObject = null;
+                        try {
+                            JSONObject dataJSONObject = new JSONObject(responseData);
+                            String userJSONString = dataJSONObject.getString(USER_KEY);
+                            user = User.parseFromJSON(userJSONString);
 
+                            String accountsJSONString = dataJSONObject.getString(ACCOUNTS_KEY);
+                            JSONArray accountsJSON = new JSONArray(accountsJSONString);
+                            List<Account> accounts = new ArrayList<Account>();
+                            if (accountsJSON != null && accountsJSON.length() > 0 && !"".equals(accountsJSONString.trim())) {
+                                for (int i = 0; i < accountsJSON.length(); i++) {
+                                    Account account = Account.parseFromJSON(accountsJSON.get(i).toString());
+                                    accounts.add(account);
+                                }
+                                user.setAccounts(accounts);
+                            } else {
+                                user.setAccounts(null);
+                            }
+
+                            String appsJSONString = dataJSONObject.getString(APPS_KEY);
+                            JSONArray appsJSON = new JSONArray(appsJSONString);
+                            List<ThirdPartApp> apps = new ArrayList<ThirdPartApp>();
+                            if (appsJSON != null && appsJSON.length() > 0 && !"".equals(appsJSONString)) {
+                                for (int i = 0; i < appsJSON.length(); i++) {
+                                    ThirdPartApp app = ThirdPartApp.parseFromJSON(appsJSON.get(i).toString());
+                                    apps.add(app);
+                                }
+                            }
+                            appRepository.saveApps(apps);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return user;
+                    }
+                    return null;
+                }
+            }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_GET_USER), request, aesKey);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 

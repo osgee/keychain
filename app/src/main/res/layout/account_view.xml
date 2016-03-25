@@ -37,17 +37,28 @@
                         android:layout_below="@+id/tv_account_name"/>
                 </RelativeLayout>
 
-                <Button
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_lock"
+                <RelativeLayout
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rl_show_password"
+                    android:clickable="true"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:scaleX="0.8"
-                    android:scaleY="0.8"
-                    android:layout_marginRight="16dp"
-                    android:background="@mipmap/ic_action_lock_closed"/>
+                    android:layout_alignParentEnd="true">
+
+                    <Button
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/btn_lock"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:focusable="false"
+                        android:layout_marginRight="16dp"
+                        android:background="@mipmap/ic_action_eye_closed"/>
+                </RelativeLayout>
+
             </RelativeLayout>
 
 </RelativeLayout>

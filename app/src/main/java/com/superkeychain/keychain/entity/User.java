@@ -37,7 +37,7 @@ public class User {
     private String secret;
     private String cookie;
     private Long cookieExpireTime;
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
 
     public static User parseFromJSON(String json) {
         if (json == null || "null".equals(json)) {
@@ -223,6 +223,10 @@ public class User {
 
     @Override
     public String toString() {
+       return getAccountName();
+    }
+
+    public String getAccountName(){
         switch (type){
             case 1:
                 return name;

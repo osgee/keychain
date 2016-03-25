@@ -6,6 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by taofeng on 3/19/16.
  */
+
 public class Account {
 
     public static final String ACCOUNT_KEY = "ACCOUNT";
@@ -159,12 +160,14 @@ public class Account {
 
     @Override
     public String toString() {
+        if(accountType==null)
+            return  username;
         switch (accountType.ordinal()){
-            case 1:
+            case 0:
                 return username;
-            case 2:
+            case 1:
                 return email;
-            case 3:
+            case 2:
                 return cellphone;
             default:
                 return email;
