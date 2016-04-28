@@ -2,7 +2,6 @@ package com.superkeychain.keychain.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,35 +11,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.entity.Account;
-import com.superkeychain.keychain.entity.AccountContent;
 
 import java.util.List;
 
 /**
  * Created by taofeng on 3/24/16.
  */
-public class AccountArrayAdapter extends BaseAdapter{
-    private LayoutInflater mInflater;
-    private int resId;
+public class AccountArrayAdapter extends BaseAdapter {
     Activity activity;
     List<Account> accounts;
-    public AccountArrayAdapter(Activity activity, int resId, List<Account> accounts){
+    private LayoutInflater mInflater;
+    private int resId;
+
+    public AccountArrayAdapter(Activity activity, int resId, List<Account> accounts) {
         this.accounts = accounts;
         this.activity = activity;
         this.resId = resId;
-        mInflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    class AccountHolder{
-        public ImageView ivAppLogo;
-        public TextView tvAccountName;
-        public TextView tvAccountPassword;
-        public RelativeLayout rlShowPassword;
-        public Button btnLock;
+        mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -65,9 +55,9 @@ public class AccountArrayAdapter extends BaseAdapter{
         AccountHolder accountHolder = null;
 //        if(convertView==null){
         accountHolder = new AccountHolder();
-        convertView = mInflater.inflate(resId,null);
-        accountHolder.ivAppLogo = (ImageView)convertView.findViewById(R.id.iv_app_logo);
-        accountHolder.tvAccountName = (TextView)convertView.findViewById(R.id.tv_account_name);
+        convertView = mInflater.inflate(resId, null);
+        accountHolder.ivAppLogo = (ImageView) convertView.findViewById(R.id.iv_app_logo);
+        accountHolder.tvAccountName = (TextView) convertView.findViewById(R.id.tv_account_name);
         accountHolder.tvAccountPassword = (TextView) convertView.findViewById(R.id.tv_password);
         accountHolder.rlShowPassword = (RelativeLayout) convertView.findViewById(R.id.rl_show_password);
         accountHolder.btnLock = (Button) convertView.findViewById(R.id.btn_lock);
@@ -98,10 +88,10 @@ public class AccountArrayAdapter extends BaseAdapter{
         accountHolder.btnLock.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     finalAccountHolder.tvAccountPassword.setText(finalPassword);
                     finalAccountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_open);
-                }else if(event.getAction()==MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     finalAccountHolder.tvAccountPassword.setText("******");
                     finalAccountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_closed);
                 }
@@ -110,6 +100,14 @@ public class AccountArrayAdapter extends BaseAdapter{
         });
 
         return convertView;
+    }
+
+    class AccountHolder {
+        public ImageView ivAppLogo;
+        public TextView tvAccountName;
+        public TextView tvAccountPassword;
+        public RelativeLayout rlShowPassword;
+        public Button btnLock;
     }
 
 }

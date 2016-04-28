@@ -1,21 +1,15 @@
 package com.superkeychain.keychain.action;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.superkeychain.keychain.activity.KeychainMain;
-import com.superkeychain.keychain.activity.SignIn;
 import com.superkeychain.keychain.entity.Account;
 import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.https.HttpsPostAsync;
 import com.superkeychain.keychain.https.SecureJsonObject;
 import com.superkeychain.keychain.utils.InputValidateUtils;
-import com.superkeychain.keychain.view.ProgressDialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -143,7 +137,6 @@ public class UserAction extends Action {
                             }
                         }
 //                        userRepository.save(user);
-                        appRepository.saveApps(apps);
                         Log.d("response", User.parseToJSON(user).toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -162,7 +155,7 @@ public class UserAction extends Action {
                         context.startActivity(intent);*/
 //                        activity.finish();
 //                    }
-                    actionFinishedListener.doFinished(statusCode,message,user);
+                    actionFinishedListener.doFinished(statusCode, message, user);
 
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_SIGN_IN), requestJsonString, aesKey);
@@ -242,7 +235,6 @@ public class UserAction extends Action {
                                 apps.add(app);
                             }
                         }
-                        appRepository.saveApps(apps);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -260,7 +252,7 @@ public class UserAction extends Action {
                         activity.startActivity(intent);
                         activity.finish();
                     }*/
-                    actionFinishedListener.doFinished(statusCode,message,user);
+                    actionFinishedListener.doFinished(statusCode, message, user);
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_SIGN_UP), requestJsonString, aesKey);
 
@@ -282,7 +274,7 @@ public class UserAction extends Action {
                 @Override
                 public void doHttpsFinished(Object object) {
                     super.doHttpsFinished(object);
-                    actionFinishedListener.doFinished(statusCode,message,object);
+                    actionFinishedListener.doFinished(statusCode, message, object);
 
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_CHECK_COOKIE), request, aesKey);
@@ -305,7 +297,7 @@ public class UserAction extends Action {
             @Override
             public void doHttpsFinished(Object object) {
                 super.doHttpsFinished(object);
-                actionFinishedListener.doFinished(statusCode,message,object);
+                actionFinishedListener.doFinished(statusCode, message, object);
             }
         }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_SIGN_OUT), request, aesKey);
         userRepository.delete();
@@ -315,10 +307,10 @@ public class UserAction extends Action {
         return user.getType();
     }
 
-    public void getUser(final ActionFinishedListener actionFinishedListener){
+    public void getUser(final ActionFinishedListener actionFinishedListener) {
         SecureJsonObject secureJsonObject = getRawSecureJsonObject();
         try {
-            secureJsonObject.addAttribute(ACCOUNT_TYPE,ACCOUNT_TYPE_COOKIE);
+            secureJsonObject.addAttribute(ACCOUNT_TYPE, ACCOUNT_TYPE_COOKIE);
             secureJsonObject.addSecureAttribute(USERNAME, user.getAccountName());
             secureJsonObject.addSecureAttribute(PASSWORD, user.getPassword());
             secureJsonObject.addSecureAttribute(DEVICE_ID, deviceId);
@@ -327,16 +319,17 @@ public class UserAction extends Action {
                 @Override
                 public void doHttpsFinished(Object userObject) {
                     super.doHttpsFinished(userObject);
-                    if(userObject!=null){
+                    if (userObject != null) {
                         user = (User) userObject;
-                        actionFinishedListener.doFinished(statusCode,message,user);
+                        actionFinishedListener.doFinished(statusCode, message, user);
                     }
-                    actionFinishedListener.doFinished(statusCode,message,null);
+                    actionFinishedListener.doFinished(statusCode, message, null);
                 }
+
                 @Override
                 public Object doHttpsResponse(String response) {
                     String responseData = (String) super.doHttpsResponse(response);
-                    if(statusCode==STATUS_CODE_OK){
+                    if (statusCode == STATUS_CODE_OK) {
                         User user = null;
                         JSONObject responseJSONObject = null;
                         try {
@@ -366,7 +359,6 @@ public class UserAction extends Action {
                                     apps.add(app);
                                 }
                             }
-                            appRepository.saveApps(apps);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -380,7 +372,6 @@ public class UserAction extends Action {
             e.printStackTrace();
         }
     }
-
 
 
 }

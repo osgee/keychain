@@ -160,9 +160,9 @@ public class Account {
 
     @Override
     public String toString() {
-        if(accountType==null)
-            return  username;
-        switch (accountType.ordinal()){
+        if (accountType == null)
+            return username;
+        switch (accountType.ordinal()) {
             case 0:
                 return username;
             case 1:

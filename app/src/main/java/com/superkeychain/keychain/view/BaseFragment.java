@@ -1,6 +1,5 @@
 package com.superkeychain.keychain.view;
 
-import android.support.v4.app.ListFragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,7 @@ import com.superkeychain.keychain.repository.UserRepository;
  * Time: 09:01
  * FIXME
  */
-public class BaseFragment extends Fragment{
+public class BaseFragment extends Fragment {
 
     private Button btnSignOut, btnAccountAdd, btnAccountsGet;
     private UserRepository userRepository;

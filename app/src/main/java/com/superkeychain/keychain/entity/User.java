@@ -223,11 +223,11 @@ public class User {
 
     @Override
     public String toString() {
-       return getAccountName();
+        return getAccountName();
     }
 
-    public String getAccountName(){
-        switch (type){
+    public String getAccountName() {
+        switch (type) {
             case 1:
                 return name;
             case 2:

@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.superkeychain.keychain.view.ScanFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_background">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:id="@+id/rl_scan"
+            android:background="@color/white">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="扫码登录"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:id="@+id/rl_scan_sign_up"
+            android:background="@color/white"
+            android:layout_marginTop="1dp"
+            android:layout_below="@+id/rl_scan_sign_in">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"/>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:text="扫码注册"
+                android:textSize="16dp"
+                android:layout_marginLeft="60dp"
+                android:textAlignment="center" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

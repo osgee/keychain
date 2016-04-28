@@ -1,28 +1,27 @@
 package com.superkeychain.keychain.view;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.activity.AccountCase;
 import com.superkeychain.keychain.entity.Account;
-import com.superkeychain.keychain.entity.AccountContent;
-import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,17 +35,17 @@ public class AccountFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String JSON_USER = "JSON_USER";
-
+    ListView listView;
+    BaseAdapter adapter;
     // TODO: Rename and change types of parameters
     private String mJsonUser;
     private User mUser;
     private List<Account> accounts;
-
-    ListView listView;
-    BaseAdapter adapter;
-
-
     private OnFragmentInteractionListener mListener;
+
+    public AccountFragment() {
+        // Required empty public constructor
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -64,19 +63,15 @@ public class AccountFragment extends BaseFragment {
         return fragment;
     }
 
-    public AccountFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mJsonUser = getArguments().getString(JSON_USER);
             mUser = User.parseFromJSON(mJsonUser);
-            if(mUser!=null&&mUser.getAccounts()!=null&&mUser.getAccounts().size()>0){
+            if (mUser != null && mUser.getAccounts() != null && mUser.getAccounts().size() > 0) {
                 accounts = mUser.getAccounts();
-            }else{
+            } else {
                 accounts = new ArrayList<>();
             }
         }
@@ -86,8 +81,30 @@ public class AccountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_account, container, false);
-         listView = (ListView) view.findViewById(R.id.list);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
+        final PtrFrameLayout ptrFrame = (PtrFrameLayout) view;
+        ptrFrame.setPtrHandler(new PtrDefaultHandler() {
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                frame.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        ptrFrame.refreshComplete();
+                    }
+                }, 1800);
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+        });
+        listView = (ListView) view.findViewById(R.id.list);
 //        AccountContent.accounts=accounts;
         adapter = new AccountArrayAdapter(getActivity(),
                 R.layout.account_view, accounts);
@@ -108,9 +125,8 @@ public class AccountFragment extends BaseFragment {
     }
 
 
-
-    public void refreshAccounts(List<Account> accounts){
-        if(accounts!=null&&adapter!=null){
+    public void refreshAccounts(List<Account> accounts) {
+        if (accounts != null && adapter != null) {
 //            this.accounts = accounts;
             this.accounts.clear();
             this.accounts.addAll(accounts);
@@ -120,14 +136,14 @@ public class AccountFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        if(adapter!=null){
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
         super.onResume();
     }
 
-    public void addRefreshAccounts(Account account){
-        if(account!=null&&adapter!=null){
+    public void addRefreshAccounts(Account account) {
+        if (account != null && adapter != null) {
 //            this.accounts = accounts;
 //            this.accounts.clear();
             this.accounts.add(account);
@@ -136,18 +152,18 @@ public class AccountFragment extends BaseFragment {
     }
 
     public void delRefreshAccounts(Account account) {
-        if(account!=null&&adapter!=null){
+        if (account != null && adapter != null) {
 //            this.accounts = accounts;
 //            this.accounts.clear();
             int i;
             boolean isExist = false;
-            for(i=0;i<this.accounts.size();i++){
-                if(account.getAccountId()!=null&&account.getAccountId().equals(this.accounts.get(i).getAccountId())) {
+            for (i = 0; i < this.accounts.size(); i++) {
+                if (account.getAccountId() != null && account.getAccountId().equals(this.accounts.get(i).getAccountId())) {
                     isExist = true;
                     break;
                 }
             }
-            if(isExist){
+            if (isExist) {
                 this.accounts.remove(i);
                 adapter.notifyDataSetChanged();
             }
@@ -155,18 +171,18 @@ public class AccountFragment extends BaseFragment {
     }
 
     public void updateRefreshAccounts(Account account) {
-        if(account!=null&&adapter!=null){
+        if (account != null && adapter != null) {
 //            this.accounts = accounts;
 //            this.accounts.clear();
             int i;
             boolean isExist = false;
-            for(i=0;i<this.accounts.size();i++){
-                if(account.getAccountId()!=null&&account.getAccountId().equals(this.accounts.get(i).getAccountId())) {
+            for (i = 0; i < this.accounts.size(); i++) {
+                if (account.getAccountId() != null && account.getAccountId().equals(this.accounts.get(i).getAccountId())) {
                     isExist = true;
                     break;
                 }
             }
-            if(isExist){
+            if (isExist) {
                 this.accounts.remove(i);
                 this.accounts.add(account);
                 adapter.notifyDataSetChanged();
@@ -199,14 +215,12 @@ public class AccountFragment extends BaseFragment {
     }
 
 
-
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

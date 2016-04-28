@@ -1,21 +1,14 @@
 package com.superkeychain.keychain.action;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.superkeychain.keychain.R;
-import com.superkeychain.keychain.activity.AccountCase;
 import com.superkeychain.keychain.entity.Account;
-import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.https.HttpsPostAsync;
 import com.superkeychain.keychain.https.SecureJsonObject;
 import com.superkeychain.keychain.utils.InputValidateUtils;
-import com.superkeychain.keychain.view.ProgressDialogUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +25,7 @@ public class UserAccountAction extends Action {
 
     private Account account;
 
-    public UserAccountAction(Activity activity,User user) {
+    public UserAccountAction(Activity activity, User user) {
         super(activity);
         this.user = user;
         if (this.user == null || this.user.getAccounts() == null) {
@@ -72,15 +65,15 @@ public class UserAccountAction extends Action {
 //                        user.setAccounts(accounts);
 //                        userRepository.save(user);
 //                    }
-                    actionFinishedListener.doFinished(statusCode,message,account);
+                    actionFinishedListener.doFinished(statusCode, message, account);
 
                 }
 
                 @Override
                 public Object doHttpsResponse(String response) {
                     String responseData = (String) super.doHttpsResponse(response);
-                    Log.d("response_account",responseData);
-                    if(statusCode==STATUS_CODE_OK){
+                    Log.d("response_account", responseData);
+                    if (statusCode == STATUS_CODE_OK) {
 //                        String jsonAccount = (String) e(responseData);
                         try {
                             JSONObject accountJSON = new JSONObject(responseData);
@@ -153,7 +146,7 @@ public class UserAccountAction extends Action {
                 public void doHttpsFinished(Object object) {
                     super.doHttpsFinished(object, false);
 //                    dialog.dismiss();
-                   List<Account> accounts = (List<Account>) object;
+                    List<Account> accounts = (List<Account>) object;
                   /*   if (accounts != null && accounts.size() > 0) {
 
                         Intent intent = new Intent(activity, AccountCase.class);
@@ -166,10 +159,10 @@ public class UserAccountAction extends Action {
                         Toast.makeText(context, "Account Not Exist", Toast.LENGTH_SHORT).show();
                     }*/
 
-                    if(accounts!=null&&accounts.size()>0){
+                    if (accounts != null && accounts.size() > 0) {
                         user.setAccounts(accounts);
                     }
-                    actionFinishedListener.doFinished(statusCode,message,user);
+                    actionFinishedListener.doFinished(statusCode, message, user);
                 }
 
                 @Override
@@ -264,7 +257,7 @@ public class UserAccountAction extends Action {
                         activity.finish();
                         activity.overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
                     }*/
-                    actionFinishedListener.doFinished(statusCode,message,account);
+                    actionFinishedListener.doFinished(statusCode, message, account);
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_DELETE_ACCOUNT), request, aesKey);
 
@@ -295,14 +288,14 @@ public class UserAccountAction extends Action {
                     }else{
                         actionFinishedListener.doFinished(null,message);
                     }*/
-                    actionFinishedListener.doFinished(statusCode,message,object);
+                    actionFinishedListener.doFinished(statusCode, message, object);
                 }
 
                 @Override
                 public Object doHttpsResponse(String response) {
                     String responseData = (String) super.doHttpsResponse(response);
                     Log.d("response_account", responseData);
-                    if(statusCode==STATUS_CODE_OK){
+                    if (statusCode == STATUS_CODE_OK) {
 //                        String jsonAccount = (String) e(responseData);
                         try {
                             JSONObject accountJSON = new JSONObject(responseData);

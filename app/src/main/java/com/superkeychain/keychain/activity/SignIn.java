@@ -2,7 +2,6 @@ package com.superkeychain.keychain.activity;
 
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -165,14 +164,14 @@ public class SignIn extends AppCompatActivity implements View.OnClickListener {
         if (validateSignIn(true)) {
             String username = etUsername.getText().toString();
             String password = etPassword.getText().toString();
-            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(SignIn.this,"Please Wait...");
+            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(SignIn.this, "Please Wait...");
             dialog.show();
             userAction.signIn(username, password, new ActionFinishedListener() {
                 @Override
                 public void doFinished(int status, String message, Object user) {
                     dialog.dismiss();
-                    Toast.makeText(SignIn.this,message,Toast.LENGTH_SHORT).show();
-                    if(status== Action.STATUS_CODE_OK){
+                    Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
+                    if (status == Action.STATUS_CODE_OK) {
                         Intent intent = new Intent(SignIn.this, KeychainMain.class);
                         intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
                         startActivity(intent);

@@ -23,15 +23,14 @@ import com.superkeychain.keychain.action.UserAction;
 import com.superkeychain.keychain.action.UserAppAction;
 import com.superkeychain.keychain.entity.Account;
 import com.superkeychain.keychain.entity.User;
-import com.superkeychain.keychain.repository.AppRepository;
 import com.superkeychain.keychain.repository.UserRepository;
 import com.superkeychain.keychain.view.AccountFragment;
-import com.superkeychain.keychain.view.AccountFragmentBackUp;
 import com.superkeychain.keychain.view.BaseFragment;
 import com.superkeychain.keychain.view.IconPagerAdapter;
 import com.superkeychain.keychain.view.IconTabPageIndicator;
 import com.superkeychain.keychain.view.MineFragment;
 import com.superkeychain.keychain.view.ProgressDialogUtil;
+import com.superkeychain.keychain.view.ScanFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,10 +38,9 @@ import java.util.List;
 
 
 public class KeychainMain extends FragmentActivity implements MineFragment.OnFragmentInteractionListener,
-        AccountFragmentBackUp.OnFragmentInteractionListener,AccountFragment.OnFragmentInteractionListener,View.OnClickListener{
+        AccountFragment.OnFragmentInteractionListener, ScanFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     private UserRepository userRepository;
-    private AppRepository appRepository;
     private UserAction userAction;
     private UserAppAction userAppAction;
     private UserAccountAction userAccountAction;
@@ -53,14 +51,13 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
     private IconTabPageIndicator mIndicator;
     private ImageView ivAccountAdd;
 
-    private List<RelativeLayout> rlActionBars=new ArrayList<>();
+    private List<RelativeLayout> rlActionBars = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userRepository = new UserRepository(this);
-        appRepository = new AppRepository(this);
 
         Intent intentFromSignIn = getIntent();
         String userJson = intentFromSignIn.getStringExtra(User.USER_KEY);
@@ -68,7 +65,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         if (userJson != null) {
             user = User.parseFromJSON(userJson);
             userRepository.save(user);
-        }else{
+        } else {
             user = userRepository.get();
         }
 
@@ -79,7 +76,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
             startActivity(intent);
             finish();
         } else {
-            userAccountAction = new UserAccountAction(this,user);
+            userAccountAction = new UserAccountAction(this, user);
             userAppAction = new UserAppAction(this);
             userAppAction.saveAllApps();
             Long cookieExpireTime = user.getCookieExpireTime();
@@ -88,8 +85,8 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
             userAction.checkCookie(new ActionFinishedListener() {
                 @Override
                 public void doFinished(int status, String message, Object user) {
-                    if (status< 0) {
-                        Toast.makeText(KeychainMain.this,"Expired, Please Sign In",Toast.LENGTH_SHORT).show();
+                    if (status < 0) {
+                        Toast.makeText(KeychainMain.this, "Expired, Please Sign In", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(KeychainMain.this, SignIn.class);
                         startActivity(intent);
                         userAction.signOut(new ActionFinishedListener() {
@@ -108,7 +105,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         this.user = user;
         setContentView(R.layout.activity_keychain_main);
         ivAccountAdd = (ImageView) findViewById(R.id.iv_account_add);
-        RelativeLayout rlBarAccount = (RelativeLayout)findViewById(R.id.rl_bar_account);
+        RelativeLayout rlBarAccount = (RelativeLayout) findViewById(R.id.rl_bar_account);
         RelativeLayout rlBarScan = (RelativeLayout) findViewById(R.id.rl_bar_scan);
         RelativeLayout rlBarMine = (RelativeLayout) findViewById(R.id.rl_bar_mine);
         rlActionBars.add(rlBarAccount);
@@ -120,19 +117,19 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         showActionBarAt(0);
     }
 
-    public void showActionBarAt(int i){
-        for(int j=0;j<rlActionBars.size();j++){
-            if(i==j){
+    public void showActionBarAt(int i) {
+        for (int j = 0; j < rlActionBars.size(); j++) {
+            if (i == j) {
                 rlActionBars.get(j).setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 rlActionBars.get(j).setVisibility(View.GONE);
             }
         }
     }
 
 
-    private void refreshAccountsFromServer(){
-        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(KeychainMain.this,"Please Wait...");
+    private void refreshAccountsFromServer() {
+        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(KeychainMain.this, "Please Wait...");
         dialog.show();
         userAccountAction.getAccounts(new ActionFinishedListener() {
             @Override
@@ -150,22 +147,25 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
 
     }
 
-    private void refreshAccounts(Account account){
+    private void refreshAccounts(Account account) {
         FragmentAdapter adapter = (FragmentAdapter) mViewPager.getAdapter();
         AccountFragment accountFragment = (AccountFragment) adapter.getFragments().get(0);
         accountFragment.refreshAccounts(user.getAccounts());
     }
-    private void addRefreshAccounts(Account account){
+
+    private void addRefreshAccounts(Account account) {
         FragmentAdapter adapter = (FragmentAdapter) mViewPager.getAdapter();
         AccountFragment accountFragment = (AccountFragment) adapter.getFragments().get(0);
         accountFragment.addRefreshAccounts(account);
     }
-    private void delRefreshAccounts(Account account){
+
+    private void delRefreshAccounts(Account account) {
         FragmentAdapter adapter = (FragmentAdapter) mViewPager.getAdapter();
         AccountFragment accountFragment = (AccountFragment) adapter.getFragments().get(0);
         accountFragment.delRefreshAccounts(account);
     }
-    private void updateRefreshAccounts(Account account){
+
+    private void updateRefreshAccounts(Account account) {
         FragmentAdapter adapter = (FragmentAdapter) mViewPager.getAdapter();
         AccountFragment accountFragment = (AccountFragment) adapter.getFragments().get(0);
         accountFragment.updateRefreshAccounts(account);
@@ -206,7 +206,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         userFragment.setIconId(R.drawable.tab_account_selector);
         fragments.add(userFragment);
 
-        BaseFragment noteFragment = new BaseFragment();
+        BaseFragment noteFragment = ScanFragment.newInstance(this.user.toJSONString());
         noteFragment.setTitle("扫码");
         noteFragment.setIconId(R.drawable.tab_scan_selector);
         fragments.add(noteFragment);
@@ -226,7 +226,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
 
     @Override
     public void onFragmentInteraction(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_sign_out:
                 userAction.signOut(new ActionFinishedListener() {
                     @Override
@@ -239,17 +239,13 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                 finish();
                 break;
             case R.id.rl_mine_info:
-                Toast.makeText(KeychainMain.this,"not implemented yet",Toast.LENGTH_SHORT).show();
+                Toast.makeText(KeychainMain.this, "not implemented yet", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
         }
     }
 
-    @Override
-    public void onFragmentInteraction(String id) {
-
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -258,9 +254,9 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_account_add:
-                Intent intentAccountAdd = new Intent(KeychainMain.this,AccountCase.class);
+                Intent intentAccountAdd = new Intent(KeychainMain.this, AccountCase.class);
                 intentAccountAdd.putExtra(User.USER_KEY, User.parseToJSON(user).toString());
                 startActivityForResult(intentAccountAdd, AccountCase.MODE_ADD);
                 overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
@@ -280,11 +276,11 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode){
+        switch (resultCode) {
             case AccountCase.ACCOUNT_CASE_ADD_SUCCEED:
 //                Log.d("reenter", data.getStringExtra(Account.ACCOUNT_KEY));
                 Account accountAdd = Account.parseFromJSON(data.getStringExtra(Account.ACCOUNT_KEY));
-                if(accountAdd!=null){
+                if (accountAdd != null) {
                     user.getAccounts().add(accountAdd);
                     userRepository.save(user);
                     addRefreshAccounts(accountAdd);
@@ -292,16 +288,16 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                 break;
             case AccountCase.ACCOUNT_CASE_DELETE_SUCCEED:
                 Account accountDel = Account.parseFromJSON(data.getStringExtra(Account.ACCOUNT_KEY));
-                Log.d("DELETE_SUCCEED",accountDel.toJSONString());
+                Log.d("DELETE_SUCCEED", accountDel.toJSONString());
                 int i;
                 boolean isExist = false;
-                for(i=0;i<user.getAccounts().size();i++){
-                    if(accountDel!=null&&accountDel.getAccountId()!=null&&accountDel.getAccountId().equals(user.getAccounts().get(i).getAccountId())){
+                for (i = 0; i < user.getAccounts().size(); i++) {
+                    if (accountDel != null && accountDel.getAccountId() != null && accountDel.getAccountId().equals(user.getAccounts().get(i).getAccountId())) {
                         isExist = true;
                         break;
                     }
                 }
-                if(isExist){
+                if (isExist) {
                     user.getAccounts().remove(i);
                     userRepository.save(user);
                     delRefreshAccounts(accountDel);
@@ -309,22 +305,35 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                 break;
             case AccountCase.ACCOUNT_CASE_UPDATE_SUCCEED:
                 Account accountUpdate = Account.parseFromJSON(data.getStringExtra(Account.ACCOUNT_KEY));
-                Log.d("UPDATE_SUCCEED",accountUpdate.toJSONString());
+                Log.d("UPDATE_SUCCEED", accountUpdate.toJSONString());
                 int i2;
                 boolean isExist2 = false;
-                for(i2=0;i2<user.getAccounts().size();i2++){
-                    if(accountUpdate!=null&&accountUpdate.getAccountId()!=null&&accountUpdate.getAccountId().equals(user.getAccounts().get(i2).getAccountId())){
+                for (i2 = 0; i2 < user.getAccounts().size(); i2++) {
+                    if (accountUpdate != null && accountUpdate.getAccountId() != null && accountUpdate.getAccountId().equals(user.getAccounts().get(i2).getAccountId())) {
                         isExist2 = true;
                         break;
                     }
                 }
-                if(isExist2){
+                if (isExist2) {
                     user.getAccounts().remove(i2);
                     user.getAccounts().add(accountUpdate);
                     userRepository.save(user);
                     updateRefreshAccounts(accountUpdate);
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onFragmentInteraction(int id) {
+        switch (id){
+
+            case R.id.rl_scan:
+                        Intent openCameraIntent = new Intent(KeychainMain.this, CaptureActivity.class);
+                        startActivity(openCameraIntent);
+                break;
+                default:
+                    break;
         }
     }
 
@@ -356,7 +365,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
             return mFragments.get(position).getTitle();
         }
 
-        public List<BaseFragment> getFragments(){
+        public List<BaseFragment> getFragments() {
             return mFragments;
         }
     }

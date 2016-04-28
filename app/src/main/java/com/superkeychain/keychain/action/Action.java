@@ -6,7 +6,6 @@ import android.content.Context;
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.https.SecureJsonObject;
-import com.superkeychain.keychain.repository.AppRepository;
 import com.superkeychain.keychain.repository.UserRepository;
 import com.superkeychain.keychain.utils.AESUtils;
 import com.superkeychain.keychain.utils.PhoneUtils;
@@ -41,6 +40,9 @@ public abstract class Action {
     public static final String SIGN = "token";
     public static final String SIM_SERIAL_NUMBER = "sim_serial_number";
     public static final String LINE_1_NUMBER = "line_1_number";
+    public static final String SERVICE_ID = "service_id";
+
+
     //Actions URI
     public static final String PROTOCOl_HTTPS = "https://";
     //    public static final String HOST = "192.168.43.119";
@@ -55,6 +57,8 @@ public abstract class Action {
     public static final String ACTION_UPDATE_ACCOUNT = "/keychain/client/user/account/update/";
     public static final String ACTION_DELETE_ACCOUNT = "/keychain/client/user/account/delete/";
     public static final String ACTION_GET_ALL_APPS = "/keychain/client/user/apps/getall/";
+    public static final String ACTION_SERVICE_QUERY = "/keychain/service/query/";
+//    public static final String ACTION_GET_ALL_APPS = "/keychain/client/user/apps/getall/";
 
     public static final String ACTION_GET_USER = "/keychain/client/user/get/";
     public static final String ACTION_SET_USER = "/keychain/client/user/set/";
@@ -101,7 +105,6 @@ public abstract class Action {
     protected User user;
     protected String randomToken;
     protected UserRepository userRepository;
-    protected AppRepository appRepository;
     protected PublicKey publicKey;
 
     public Action(Activity activity) {
@@ -119,12 +122,11 @@ public abstract class Action {
         randomToken = AESUtils.getRandomKey(8);
         userRepository = new UserRepository(activity);
         User localUser = null;
-        if(this.user==null){
-            if((localUser=userRepository.get())!=null)
-            this.user = localUser;
+        if (this.user == null) {
+            if ((localUser = userRepository.get()) != null)
+                this.user = localUser;
             else this.user = new User();
         }
-        appRepository = new AppRepository(activity);
         inpub = context.getApplicationContext().getResources().openRawResource(R.raw.rsa_public_key);
         try {
             publicKey = RSAUtils.loadPublicKey(inpub);
@@ -163,8 +165,8 @@ public abstract class Action {
             secureJsonObject.addAttribute(TIME, time);
             secureJsonObject.addAttribute(RANDOM_TOKEN, randomToken);
 //            if (user != null) {
-                secureJsonObject.addSecureAttribute(USER_ID, user.getId());
-                secureJsonObject.addSecureAttribute(COOKIE, user.getCookie());
+            secureJsonObject.addSecureAttribute(USER_ID, user.getId());
+            secureJsonObject.addSecureAttribute(COOKIE, user.getCookie());
 //            }
             secureJsonObject.addSecureAttribute(AES_KEY, aesKey);
             secureJsonObject.addSecureAttribute(TIME, time);

@@ -1,52 +1,56 @@
 package com.superkeychain.keychain.view;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.superkeychain.keychain.activity.CaptureActivity;
 import com.superkeychain.keychain.R;
+
 import com.superkeychain.keychain.entity.User;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MineFragment.OnFragmentInteractionListener} interface
+ * {@link ScanFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link MineFragment#newInstance} factory method to
+ * Use the {@link ScanFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MineFragment extends BaseFragment implements View.OnClickListener {
-
+public class ScanFragment extends BaseFragment {
     private static final String JSON_USER = "UserJsonString";
 
     private String mJsonUser;
     private User user;
 
-    private OnFragmentInteractionListener mListener;
+    private RelativeLayout rlScan;
 
-    public MineFragment() {
-        // Required empty public constructor
-    }
+    private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param jsonUser Parameter 1
-     * @return A new instance of fragment MineFragment.
+     * @param jsonUser Parameter 1.
+     * @return A new instance of fragment ScanFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MineFragment newInstance(String jsonUser) {
-        MineFragment fragment = new MineFragment();
+    public static ScanFragment newInstance(String jsonUser) {
+        ScanFragment fragment = new ScanFragment();
         Bundle args = new Bundle();
         args.putString(JSON_USER, jsonUser);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public ScanFragment() {
+        // Required empty public constructor
     }
 
     @Override
@@ -54,7 +58,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mJsonUser = getArguments().getString(JSON_USER);
-            user = User.parseFromJSON(mJsonUser);
         }
     }
 
@@ -62,18 +65,20 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_mine_list_view, container, false);
-        Button btnSignOut = (Button) view.findViewById(R.id.btn_sign_out);
-        btnSignOut.setOnClickListener(this);
-        RelativeLayout rlMineInfo = (RelativeLayout) view.findViewById(R.id.rl_mine_info);
-        rlMineInfo.setOnClickListener(this);
+        View view = inflater.inflate(R.layout.fragment_scan, container, false);
+        rlScan = (RelativeLayout)view.findViewById(R.id.rl_scan);
+        rlScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onButtonPressed(v.getId());
+            }
+        });
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onPressed(View view) {
+    public void onButtonPressed(int id) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(view);
+            mListener.onFragmentInteraction(id);
         }
     }
 
@@ -94,24 +99,19 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         mListener = null;
     }
 
-    @Override
-    public void onClick(View v) {
-        onPressed(v);
-    }
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(View view);
+        public void onFragmentInteraction(int id);
     }
 
 }

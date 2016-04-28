@@ -32,10 +32,6 @@ import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.utils.InputValidateUtils;
 import com.superkeychain.keychain.view.ProgressDialogUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,8 +89,8 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
         apps = new ArrayList<>();
 //        String appJSONString = intent.getStringExtra(ThirdPartApp.APPS_KEY);
 
-        userAccountAction = new UserAccountAction(this,user);
-        userAppAction = new UserAppAction(this,user);
+        userAccountAction = new UserAccountAction(this, user);
+        userAppAction = new UserAppAction(this, user);
 
         if (account != null) {
             setMode(MODE_REVISE);
@@ -111,7 +107,7 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
             userAppAction.getAllApps(new ActionFinishedListener() {
                 @Override
                 public void doFinished(int status, String message, Object appsObject) {
-                    if(status==Action.STATUS_CODE_OK){
+                    if (status == Action.STATUS_CODE_OK) {
                         apps = (List<ThirdPartApp>) appsObject;
                         List<String> appsName = new ArrayList<String>();
                         if (apps != null && apps.size() > 0) {
@@ -146,7 +142,7 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
                 @Override
                 public void doFinished(int status, String message, Object appsObject) {
                     apps = (List<ThirdPartApp>) appsObject;
-                      List<String> appsName = new ArrayList<String>();
+                    List<String> appsName = new ArrayList<String>();
                     if (apps != null && apps.size() > 0) {
                         for (ThirdPartApp app : apps) {
                             appsName.add(app.getAppName());
@@ -292,7 +288,7 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
 
         isInputValid = isInputValid && ("".equals(email) || InputValidateUtils.isEmail(email));
         isInputValid = isInputValid && ("".equals(cellphone) || InputValidateUtils.isCellphone(cellphone));
-        isInputValid = isInputValid && apps!=null&&spinnerApps!=null&&spinnerApps.getSelectedItemPosition()>=0&&spinnerApps.getSelectedItemPosition()<apps.size();
+        isInputValid = isInputValid && apps != null && spinnerApps != null && spinnerApps.getSelectedItemPosition() >= 0 && spinnerApps.getSelectedItemPosition() < apps.size();
 
         if (isInputValid) {
             btnAccountAdd.setBackgroundResource(R.color.sky_blue);
@@ -349,19 +345,19 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
     private void deleteAccount() {
         if (mode == MODE_REVISE) {
             btnAccountDelete.setClickable(false);
-            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this,"Please Wait...");
+            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this, "Please Wait...");
             dialog.show();
             userAccountAction.deleteAccount(account, new ActionFinishedListener() {
 
                 @Override
                 public void doFinished(int status, String message, Object object) {
                     dialog.dismiss();
-                    Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
-                    if (status==Action.STATUS_CODE_OK){
+                    Toast.makeText(AccountCase.this, message, Toast.LENGTH_SHORT).show();
+                    if (status == Action.STATUS_CODE_OK) {
                         Intent intent = new Intent();
                         Account account = (Account) object;
-                        intent.putExtra(Account.ACCOUNT_KEY,account.toJSONString());
-                        setResult(ACCOUNT_CASE_DELETE_SUCCEED,intent);
+                        intent.putExtra(Account.ACCOUNT_KEY, account.toJSONString());
+                        setResult(ACCOUNT_CASE_DELETE_SUCCEED, intent);
                         finish();
                     }
                 }
@@ -398,19 +394,19 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
                 account.setEmail(email);
                 account.setCellphone(cellphone);
 
-                final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this,"Please Wait...");
+                final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this, "Please Wait...");
                 dialog.show();
                 userAccountAction.updateAccount(account, new ActionFinishedListener() {
 
                     @Override
                     public void doFinished(int status, String message, Object object) {
                         dialog.dismiss();
-                        Toast.makeText(AccountCase.this,message,Toast.LENGTH_SHORT).show();
-                        if(status== Action.STATUS_CODE_OK){
+                        Toast.makeText(AccountCase.this, message, Toast.LENGTH_SHORT).show();
+                        if (status == Action.STATUS_CODE_OK) {
                             Intent intent = new Intent();
-                            Account account = (Account)object;
-                            intent.putExtra(Account.ACCOUNT_KEY,account.toJSONString());
-                            setResult(ACCOUNT_CASE_UPDATE_SUCCEED,intent);
+                            Account account = (Account) object;
+                            intent.putExtra(Account.ACCOUNT_KEY, account.toJSONString());
+                            setResult(ACCOUNT_CASE_UPDATE_SUCCEED, intent);
                             finish();
                         }
                     }
@@ -452,19 +448,19 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
             if (!"".equals(cellphone)) {
                 account.setCellphone(cellphone);
             }
-            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this,"Please Wait...");
+            final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this, "Please Wait...");
             dialog.show();
             userAccountAction.addAccount(account, new ActionFinishedListener() {
                 @Override
                 public void doFinished(int status, String message, Object object) {
                     dialog.dismiss();
-                    if(!"".equals(message)) {
+                    if (!"".equals(message)) {
                         Toast.makeText(AccountCase.this, message, Toast.LENGTH_SHORT).show();
                     }
                     if (status == 1) {
                         Account account = (Account) object;
                         Intent intent = new Intent();
-                        intent.putExtra(Account.ACCOUNT_KEY,account.toJSONString());
+                        intent.putExtra(Account.ACCOUNT_KEY, account.toJSONString());
                         setResult(ACCOUNT_CASE_ADD_SUCCEED, intent);
                         finish();
                         overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);

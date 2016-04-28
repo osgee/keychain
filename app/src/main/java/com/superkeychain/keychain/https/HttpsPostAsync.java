@@ -2,8 +2,6 @@ package com.superkeychain.keychain.https;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.action.Action;
@@ -204,7 +202,7 @@ public class HttpsPostAsync extends AsyncTask<String, String, Object> {
         protected boolean networkStatus = true;
         protected String aesKey;
         protected Context context;
-        protected String message="";
+        protected String message = "";
 
         private void setContext(Context context) {
             this.context = context;
@@ -224,18 +222,18 @@ public class HttpsPostAsync extends AsyncTask<String, String, Object> {
                 if (statusCode != 0) {
                     String errorMessage = Action.getStatusMessage(statusCode);
                     if (errorMessage != null)
-                       message = Action.getStatusMessage(statusCode);
+                        message = Action.getStatusMessage(statusCode);
                 } else {
                     switch (responseCode) {
                         case HttpURLConnection.HTTP_NOT_FOUND:
-                            message ="Invalid Action";
+                            message = "Invalid Action";
                             break;
                         case HttpURLConnection.HTTP_INTERNAL_ERROR:
                             message = "Internal Error";
                             break;
                         default:
                             if (!networkStatus) {
-                                message ="Network Error";
+                                message = "Network Error";
                             }
                             break;
                     }

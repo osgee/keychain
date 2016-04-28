@@ -99,8 +99,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         userAction.signUp(username, password, new ActionFinishedListener() {
                             @Override
                             public void doFinished(int status, String message, Object user) {
-                                Toast.makeText(SignUp.this,message,Toast.LENGTH_SHORT).show();
-                                if(status== Action.STATUS_CODE_OK){
+                                Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
+                                if (status == Action.STATUS_CODE_OK) {
                                     Intent intent = new Intent(SignUp.this, KeychainMain.class);
                                     intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
                                     startActivity(intent);
@@ -130,14 +130,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 if (validateSignUp()) {
                     String username = etUsername.getText().toString();
                     String password = etPassword.getText().toString();
-                    final Dialog dialog = ProgressDialogUtil.createLoadingDialog(SignUp.this,"Please Wait...");
+                    final Dialog dialog = ProgressDialogUtil.createLoadingDialog(SignUp.this, "Please Wait...");
                     dialog.show();
                     userAction.signUp(username, password, new ActionFinishedListener() {
                         @Override
                         public void doFinished(int status, String message, Object user) {
                             dialog.dismiss();
-                            Toast.makeText(SignUp.this,message,Toast.LENGTH_SHORT).show();
-                            if(status==Action.STATUS_CODE_OK){
+                            Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
+                            if (status == Action.STATUS_CODE_OK) {
                                 Intent intent = new Intent(SignUp.this, KeychainMain.class);
                                 intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
                                 startActivity(intent);

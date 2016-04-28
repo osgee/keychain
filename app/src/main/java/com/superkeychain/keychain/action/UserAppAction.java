@@ -1,13 +1,8 @@
 package com.superkeychain.keychain.action;
 
 import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
-import com.superkeychain.keychain.R;
-import com.superkeychain.keychain.activity.AccountCase;
 import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.https.HttpsPostAsync;
@@ -27,10 +22,11 @@ import java.util.List;
  */
 public class UserAppAction extends Action {
 
-    public UserAppAction(Activity activity,User user) {
+    public UserAppAction(Activity activity, User user) {
         super(activity);
         this.user = user;
     }
+
     public UserAppAction(Activity activity) {
         super(activity);
     }
@@ -70,7 +66,7 @@ public class UserAppAction extends Action {
 
                     }*/
 
-                    actionFinishedListener.doFinished(statusCode,message,apps);
+                    actionFinishedListener.doFinished(statusCode, message, apps);
                 }
             }
 
@@ -100,7 +96,6 @@ public class UserAppAction extends Action {
                             ThirdPartApp app = ThirdPartApp.parseFromJSON(appsJSON.get(i).toString());
                             apps.add(app);
                         }
-                        appRepository.saveApps(apps);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -155,7 +150,6 @@ public class UserAppAction extends Action {
                             ThirdPartApp app = ThirdPartApp.parseFromJSON(appsJSON.get(i).toString());
                             apps.add(app);
                         }
-                        appRepository.saveApps(apps);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -165,6 +159,9 @@ public class UserAppAction extends Action {
             }
         }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_GET_ALL_APPS), request, aesKey);
 
-
     }
+
+
+
+
 }
