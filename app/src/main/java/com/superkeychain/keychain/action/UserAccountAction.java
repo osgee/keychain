@@ -39,12 +39,9 @@ public class UserAccountAction extends Action {
 
     public void addAccount(final Account account, final ActionFinishedListener actionFinishedListener) {
         this.account = account;
-//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-//        dialog.show();
         SecureJsonObject secureJsonObject = getRawSecureJsonObject();
         try {
             secureJsonObject.addAttribute(ACCOUNT_TYPE, ACCOUNT_TYPE_COOKIE);
-            Log.d("account", Account.parseToJSON(account).toString());
             secureJsonObject.addSecureData(ACCOUNT, Account.parseToJSON(account).toString());
             secureJsonObject.addSecureData(USER_KEY, User.parseToJSON(user, false).toString());
             String request = secureJsonObject.toString();
@@ -52,19 +49,6 @@ public class UserAccountAction extends Action {
                 @Override
                 public void doHttpsFinished(Object account) {
                     super.doHttpsFinished(account);
-//                    dialog.dismiss();
-                    /*if (statusCode == 1) {
-                        accounts.add(account);
-                        user.setAccounts(accounts);
-                        userRepository.save(user);
-                        activity.finish();
-                        activity.overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
-                    }*/
-//                    if(statusCode == 1){
-//                        accounts.add(account);
-//                        user.setAccounts(accounts);
-//                        userRepository.save(user);
-//                    }
                     actionFinishedListener.doFinished(statusCode, message, account);
 
                 }
@@ -74,7 +58,6 @@ public class UserAccountAction extends Action {
                     String responseData = (String) super.doHttpsResponse(response);
                     Log.d("response_account", responseData);
                     if (statusCode == STATUS_CODE_OK) {
-//                        String jsonAccount = (String) e(responseData);
                         try {
                             JSONObject accountJSON = new JSONObject(responseData);
                             return Account.parseFromJSON(accountJSON.getString(ACCOUNT));
@@ -94,12 +77,9 @@ public class UserAccountAction extends Action {
 
     public void getAccount(final Account account, final ActionFinishedListener actionFinishedListener) {
         this.account = account;
-//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-//        dialog.show();
         SecureJsonObject secureJsonObject = getRawSecureJsonObject();
         try {
             secureJsonObject.addAttribute(ACCOUNT_TYPE, ACCOUNT_TYPE_COOKIE);
-            Log.d("account", Account.parseToJSON(account).toString());
             secureJsonObject.addSecureData(ACCOUNT, Account.parseToJSON(account).toString());
             secureJsonObject.addSecureData(USER_KEY, User.parseToJSON(user, false).toString());
             String request = secureJsonObject.toString();
@@ -107,7 +87,6 @@ public class UserAccountAction extends Action {
                 @Override
                 public void doHttpsFinished(Object object) {
                     super.doHttpsFinished(object, false);
-//                    dialog.dismiss();
                     actionFinishedListener.doFinished(statusCode, message, object);
                 }
 
@@ -117,12 +96,10 @@ public class UserAccountAction extends Action {
                     JSONObject accountJSON = null;
                     try {
                         accountJSON = new JSONObject(new JSONObject(responseData).getString(ACCOUNT));
-                        Log.d("account", accountJSON.toString());
                         return accountJSON.toString();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d("get account", accountJSON.toString());
                     return null;
                 }
 
@@ -134,8 +111,6 @@ public class UserAccountAction extends Action {
     }
 
     public void getAccounts(final ActionFinishedListener actionFinishedListener) {
-//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-//        dialog.show();
         SecureJsonObject secureJsonObject = getRawSecureJsonObject();
         try {
             secureJsonObject.addAttribute(ACCOUNT_TYPE, ACCOUNT_TYPE_COOKIE);
@@ -145,20 +120,7 @@ public class UserAccountAction extends Action {
                 @Override
                 public void doHttpsFinished(Object object) {
                     super.doHttpsFinished(object, false);
-//                    dialog.dismiss();
                     List<Account> accounts = (List<Account>) object;
-                  /*   if (accounts != null && accounts.size() > 0) {
-
-                        Intent intent = new Intent(activity, AccountCase.class);
-                        intent.putExtra(User.USER_KEY, User.parseToJSON(user).toString());
-                        intent.putExtra(Account.ACCOUNT_KEY, Account.parseToJSON(accounts.get(0)).toString());
-                        intent.putExtra(ThirdPartApp.APPS_KEY, appRepository.getAppsJSONString());
-                        activity.startActivity(intent);
-                        activity.overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-                    } else {
-                        Toast.makeText(context, "Account Not Exist", Toast.LENGTH_SHORT).show();
-                    }*/
-
                     if (accounts != null && accounts.size() > 0) {
                         user.setAccounts(accounts);
                     }
@@ -179,7 +141,6 @@ public class UserAccountAction extends Action {
                                 Account account = null;
                                 try {
                                     account = Account.parseFromJSON(accountJSONArray.get(i).toString());
-                                    Log.d("account", accountJSONArray.get(i).toString());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -235,8 +196,6 @@ public class UserAccountAction extends Action {
 
 
     public void deleteAccount(final Account account, final ActionFinishedListener actionFinishedListener) {
-//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-//        dialog.show();
         SecureJsonObject secureJsonObject = getRawSecureJsonObject();
         try {
             secureJsonObject.addAttribute(ACCOUNT_TYPE, ACCOUNT_TYPE_COOKIE);
@@ -247,16 +206,6 @@ public class UserAccountAction extends Action {
                 @Override
                 public void doHttpsFinished(Object object) {
                     super.doHttpsFinished(object);
-//                    dialog.dismiss();
-//                    accounts.remove(account);
-//                    user.setAccounts(accounts);
-                   /* if (statusCode == 1) {
-                        accounts.remove(account);
-                        user.setAccounts(accounts);
-                        userRepository.save(user);
-                        activity.finish();
-                        activity.overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
-                    }*/
                     actionFinishedListener.doFinished(statusCode, message, account);
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_DELETE_ACCOUNT), request, aesKey);
@@ -279,24 +228,13 @@ public class UserAccountAction extends Action {
                 @Override
                 public void doHttpsFinished(Object object) {
                     super.doHttpsFinished(object);
-//                    dialog.dismiss();
-                 /*   if (statusCode == 1) {
-
-                        activity.finish();
-                        activity.overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
-                        actionFinishedListener.doFinished(user, message);
-                    }else{
-                        actionFinishedListener.doFinished(null,message);
-                    }*/
                     actionFinishedListener.doFinished(statusCode, message, object);
                 }
 
                 @Override
                 public Object doHttpsResponse(String response) {
                     String responseData = (String) super.doHttpsResponse(response);
-                    Log.d("response_account", responseData);
                     if (statusCode == STATUS_CODE_OK) {
-//                        String jsonAccount = (String) e(responseData);
                         try {
                             JSONObject accountJSON = new JSONObject(responseData);
                             return Account.parseFromJSON(accountJSON.getString(ACCOUNT));

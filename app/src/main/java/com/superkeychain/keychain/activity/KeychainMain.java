@@ -78,7 +78,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         } else {
             userAccountAction = new UserAccountAction(this, user);
             userAppAction = new UserAppAction(this);
-            userAppAction.saveAllApps();
             Long cookieExpireTime = user.getCookieExpireTime();
             Long now = Calendar.getInstance().getTimeInMillis() / 1000;
             Log.d("cookieTime", cookieExpireTime + ":" + now);
@@ -97,7 +96,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                         finish();
                     }
                     isVerified = true;
-//                    refreshAccounts();
                 }
             });
 
@@ -137,7 +135,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                 if (status == Action.STATUS_CODE_OK) {
                     User user = (User) object;
                     userRepository.save(user);
-//                    initViews();
                 } else {
                     Toast.makeText(KeychainMain.this, message, Toast.LENGTH_SHORT).show();
                 }
@@ -172,7 +169,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
     }
 
     private void initViews() {
-//        this.user = userRepository.get();
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mIndicator = (IconTabPageIndicator) findViewById(R.id.indicator);
         List<BaseFragment> fragments = initFragments();
@@ -201,7 +197,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         List<BaseFragment> fragments = new ArrayList<BaseFragment>();
 
         BaseFragment userFragment = AccountFragment.newInstance(this.user.toJSONString());
-//        BaseFragment userFragment = AccountFragmentBackUp.newInstance(this.user.toJSONString());
         userFragment.setTitle("账号");
         userFragment.setIconId(R.drawable.tab_account_selector);
         fragments.add(userFragment);
@@ -210,11 +205,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         noteFragment.setTitle("扫码");
         noteFragment.setIconId(R.drawable.tab_scan_selector);
         fragments.add(noteFragment);
-/*
-        BaseFragment contactFragment = new BaseFragment();
-        contactFragment.setTitle("朋友");
-        contactFragment.setIconId(R.drawable.tab_user_selector);
-        fragments.add(contactFragment);*/
 
         BaseFragment recordFragment = MineFragment.newInstance(this.user.toJSONString());
         recordFragment.setTitle("我的");
@@ -225,7 +215,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
     }
 
     @Override
-    public void onFragmentInteraction(View view) {
+    public void onMineFragmentInteraction(View view) {
         switch (view.getId()) {
             case R.id.btn_sign_out:
                 userAction.signOut(new ActionFinishedListener() {
@@ -260,7 +250,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                 intentAccountAdd.putExtra(User.USER_KEY, User.parseToJSON(user).toString());
                 startActivityForResult(intentAccountAdd, AccountCase.MODE_ADD);
                 overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-//                refreshAccounts();
                 break;
             case R.id.iv_notification:
 
@@ -278,7 +267,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
             case AccountCase.ACCOUNT_CASE_ADD_SUCCEED:
-//                Log.d("reenter", data.getStringExtra(Account.ACCOUNT_KEY));
                 Account accountAdd = Account.parseFromJSON(data.getStringExtra(Account.ACCOUNT_KEY));
                 if (accountAdd != null) {
                     user.getAccounts().add(accountAdd);
@@ -288,7 +276,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                 break;
             case AccountCase.ACCOUNT_CASE_DELETE_SUCCEED:
                 Account accountDel = Account.parseFromJSON(data.getStringExtra(Account.ACCOUNT_KEY));
-                Log.d("DELETE_SUCCEED", accountDel.toJSONString());
                 int i;
                 boolean isExist = false;
                 for (i = 0; i < user.getAccounts().size(); i++) {
@@ -305,7 +292,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                 break;
             case AccountCase.ACCOUNT_CASE_UPDATE_SUCCEED:
                 Account accountUpdate = Account.parseFromJSON(data.getStringExtra(Account.ACCOUNT_KEY));
-                Log.d("UPDATE_SUCCEED", accountUpdate.toJSONString());
                 int i2;
                 boolean isExist2 = false;
                 for (i2 = 0; i2 < user.getAccounts().size(); i2++) {
@@ -325,15 +311,16 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
     }
 
     @Override
-    public void onFragmentInteraction(int id) {
-        switch (id){
+    public void onScanFragmentInteraction(View view) {
+        switch (view.getId()){
 
             case R.id.rl_scan:
-                        Intent openCameraIntent = new Intent(KeychainMain.this, CaptureActivity.class);
-                        startActivity(openCameraIntent);
+                Intent openCameraIntent = new Intent(KeychainMain.this, CaptureActivity.class);
+                openCameraIntent.putExtra(User.USER_KEY, user.toJSONString());
+                startActivity(openCameraIntent);
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
     }
 

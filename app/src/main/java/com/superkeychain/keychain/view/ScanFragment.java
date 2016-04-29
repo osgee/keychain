@@ -1,7 +1,6 @@
 package com.superkeychain.keychain.view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.superkeychain.keychain.activity.CaptureActivity;
 import com.superkeychain.keychain.R;
 
 import com.superkeychain.keychain.entity.User;
@@ -70,15 +68,15 @@ public class ScanFragment extends BaseFragment {
         rlScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onButtonPressed(v.getId());
+                onButtonPressed(v);
             }
         });
         return view;
     }
 
-    public void onButtonPressed(int id) {
+    public void onButtonPressed(View view) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(id);
+            mListener.onScanFragmentInteraction(view);
         }
     }
 
@@ -111,7 +109,7 @@ public class ScanFragment extends BaseFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int id);
+        public void onScanFragmentInteraction(View view);
     }
 
 }

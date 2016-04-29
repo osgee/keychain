@@ -24,6 +24,7 @@ public abstract class Action {
     public static final String USER_KEY = "user";
     public static final String ACCOUNTS_KEY = "accounts";
     public static final String APPS_KEY = "apps";
+    public static final String SERVICE_KEY = "service";
     public static final String TIME = "time";
     public static final String AES_KEY = "aes_key";
     public static final String COOKIE = "user_cookie";
@@ -40,12 +41,11 @@ public abstract class Action {
     public static final String SIGN = "token";
     public static final String SIM_SERIAL_NUMBER = "sim_serial_number";
     public static final String LINE_1_NUMBER = "line_1_number";
-    public static final String SERVICE_ID = "service_id";
 
 
     //Actions URI
     public static final String PROTOCOl_HTTPS = "https://";
-    //    public static final String HOST = "192.168.43.119";
+
     public static final String HOST = "keychain-miui.c9users.io";
     public static final String ACTION_SIGN_IN = "/keychain/client/user/signin/";
     public static final String ACTION_SIGN_UP = "/keychain/client/user/signup/";
@@ -57,7 +57,8 @@ public abstract class Action {
     public static final String ACTION_UPDATE_ACCOUNT = "/keychain/client/user/account/update/";
     public static final String ACTION_DELETE_ACCOUNT = "/keychain/client/user/account/delete/";
     public static final String ACTION_GET_ALL_APPS = "/keychain/client/user/apps/getall/";
-    public static final String ACTION_SERVICE_QUERY = "/keychain/service/query/";
+    public static final String ACTION_SERVICE_QUERY = "/keychain/client/user/service/query/";
+    public static final String ACTION_SERVICE_CONFIRM = "/keychain/client/user/service/confirm/";
 //    public static final String ACTION_GET_ALL_APPS = "/keychain/client/user/apps/getall/";
 
     public static final String ACTION_GET_USER = "/keychain/client/user/get/";
@@ -164,10 +165,8 @@ public abstract class Action {
         try {
             secureJsonObject.addAttribute(TIME, time);
             secureJsonObject.addAttribute(RANDOM_TOKEN, randomToken);
-//            if (user != null) {
             secureJsonObject.addSecureAttribute(USER_ID, user.getId());
             secureJsonObject.addSecureAttribute(COOKIE, user.getCookie());
-//            }
             secureJsonObject.addSecureAttribute(AES_KEY, aesKey);
             secureJsonObject.addSecureAttribute(TIME, time);
         } catch (JSONException e) {

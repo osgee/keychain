@@ -1,7 +1,11 @@
 package com.superkeychain.keychain.entity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by taofeng on 3/19/16.
@@ -43,6 +47,34 @@ public class Account {
         return null;
     }
 
+    public static List<Account> parseFromJSONArray(JSONArray jsonArray) {
+        if (jsonArray == null)
+            return null;
+        List<Account> accounts = new ArrayList<Account>();
+        for (int i=0;i<jsonArray.length();i++) {
+            try {
+                accounts.add(Account.parseFromJSON((String) jsonArray.get(i)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return accounts;
+    }
+
+    public static JSONArray parseToJSONArray(List<Account> accounts) {
+        if (accounts == null)
+            return null;
+        JSONArray jsonArray = new JSONArray();
+        for (int i=0;i<accounts.size();i++) {
+            try {
+                jsonArray.put(i,accounts.get(i).toJSONString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
+    }
+
     public static Account parseFromJSON(String json) {
         if (json == null || "null".equals(json))
             return null;
@@ -77,6 +109,8 @@ public class Account {
     }
 
     public static JSONObject parseToJSON(Account account) {
+        if(account==null)
+            return null;
         JSONObject jsonAccount = new JSONObject();
         try {
             jsonAccount.put(ACCOUNT_ID, account.getAccountId());

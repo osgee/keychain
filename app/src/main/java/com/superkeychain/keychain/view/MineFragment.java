@@ -73,7 +73,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
     // TODO: Rename method, update argument and hook method into UI event
     public void onPressed(View view) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(view);
+            mListener.onMineFragmentInteraction(view);
         }
     }
 
@@ -111,7 +111,7 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(View view);
+        public void onMineFragmentInteraction(View view);
     }
 
 }

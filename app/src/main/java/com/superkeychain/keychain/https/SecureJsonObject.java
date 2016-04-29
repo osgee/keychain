@@ -28,6 +28,8 @@ public class SecureJsonObject {
     private String secureAttrsKey = Action.CERT_CRYPT_RSA;
     private String secureDataKey = Action.DATA_CRYPT_AES;
 
+    private JSONObject plainJsonObject;
+
     public SecureJsonObject(PublicKey publicKey, String aesKey) {
         safeJsonObject = new JSONObject();
         secureJsonObject = new JSONObject();
@@ -103,6 +105,17 @@ public class SecureJsonObject {
         safeDataJsonObject.put(dataKey, data);
     }
 
+    public String toPlainString(){
+        plainJsonObject = new JSONObject();
+        try {
+            plainJsonObject.put(secureAttrsKey,safeJsonObject.toString());
+            plainJsonObject.put(secureDataKey,safeDataJsonObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return plainJsonObject.toString();
+    }
+
     @Override
     public String toString() {
         String safe = safeJsonObject.toString();
@@ -130,18 +143,7 @@ public class SecureJsonObject {
         String secureJsonString = secureJsonObject.toString();
 
         String secureJsonCrypt = signature(secureJsonString, aesKey);
-        //To Do  use aes or des to encrypt jsonstring
-//        try {
-//            secureJsonCrypt = AESUtils.encrypt(this.sign,secureJsonString);
-//        } catch (GeneralSecurityException e) {
-//            e.printStackTrace();
-//        }
         String signDigest = Digest.Builder.bySHA256().getDigest(secureJsonCrypt);
-//        try {
-//            secureJsonObject.put(signKey, signDigest);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
 
 
         try {
@@ -150,10 +152,6 @@ public class SecureJsonObject {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//
-//        Log.d("secureJsonString", secureJsonString);
-//        Log.d("secureJsonCrypt",secureJsonCrypt);
-//        Log.d("secureJsonCrypt",signJsonObject.toString());
         return signJsonObject.toString();
     }
 

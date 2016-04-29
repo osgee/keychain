@@ -2,6 +2,8 @@ package com.superkeychain.keychain.entity;
 
 import android.util.Log;
 
+import com.superkeychain.keychain.action.Action;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +25,7 @@ public class Service {
     public static final String SERVICE_STATUS = "service_status";
     public static final String SERVICE_APP = "service_app";
     public static final String SERVICE_ACCOUNT = "service_account";
+    public static final String SERVICE_ACCOUNTS = "service_accounts";
     public static final String SERVICE_QRCODE = "service_qrcode";
 
     private String serviceId;
@@ -32,6 +35,7 @@ public class Service {
     private String serviceStatus;
     private ThirdPartApp serviceApp;
     private Account serviceAccount;
+    private List<Account> serviceAccounts;
     private String serviceQRCode;
 
     public String getServiceId() {
@@ -98,6 +102,13 @@ public class Service {
         this.serviceQRCode = serviceQRCode;
     }
 
+    public List<Account> getServiceAccounts() {
+        return serviceAccounts;
+    }
+
+    public void setServiceAccounts(List<Account> serviceAccounts) {
+        this.serviceAccounts = serviceAccounts;
+    }
 
     public static Service parseFromJSON(String json) {
         if (json == null || "null".equals(json)) {
@@ -105,7 +116,6 @@ public class Service {
         }
         JSONObject jsonService = null;
         try {
-            Log.d("servicejson", json);
             jsonService = new JSONObject(json);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -116,13 +126,20 @@ public class Service {
     public static Service parseFromJSON(JSONObject jsonService) {
         if (jsonService != null) {
             Service service = new Service();
-            service.setServiceId(jsonService.optString(SERVICE_ID,null));
-            service.setServiceAction(jsonService.optString(SERVICE_ACTION,null));
-            service.setServiceSecret(jsonService.optString(SERVICE_SECRET,null));
-            service.setServiceTime(jsonService.optLong(SERVICE_TIME,0l));
-            service.setServiceStatus(jsonService.optString(SERVICE_STATUS,null));
-            service.setServiceApp(ThirdPartApp.parseFromJSON(jsonService.optString(SERVICE_APP,null)));
-            service.setServiceAccount(Account.parseFromJSON(jsonService.optString(SERVICE_ACCOUNT,null)));
+            service.setServiceId(jsonService.optString(SERVICE_ID, null));
+            service.setServiceAction(jsonService.optString(SERVICE_ACTION, null));
+            service.setServiceSecret(jsonService.optString(SERVICE_SECRET, null));
+            service.setServiceTime(jsonService.optLong(SERVICE_TIME, 0l));
+            service.setServiceStatus(jsonService.optString(SERVICE_STATUS, null));
+            service.setServiceApp(ThirdPartApp.parseFromJSON(jsonService.optString(SERVICE_APP, null)));
+            service.setServiceAccount(Account.parseFromJSON(jsonService.optString(SERVICE_ACCOUNT, null)));
+            try {
+                String jsonArrayString =jsonService.optString(SERVICE_ACCOUNTS, null);
+                if(jsonArrayString!=null)
+                service.setServiceAccounts(Account.parseFromJSONArray(new JSONArray(jsonArrayString)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             service.setServiceQRCode(jsonService.optString(SERVICE_QRCODE,null));
             return service;
         }
@@ -132,6 +149,8 @@ public class Service {
 
 
     public static JSONObject parseToJSON(Service service) {
+        if(service==null)
+            return null;
         JSONObject jsonService = new JSONObject();
         try {
             jsonService.put(SERVICE_ID, service.getServiceId());
@@ -139,8 +158,9 @@ public class Service {
             jsonService.put(SERVICE_SECRET,service.getServiceSecret());
             jsonService.put(SERVICE_TIME,service.getServiceTime());
             jsonService.put(SERVICE_STATUS,service.getServiceStatus());
-            jsonService.put(SERVICE_APP,ThirdPartApp.parseToJSON(service.getServiceApp()));
-            jsonService.put(SERVICE_ACCOUNT,Account.parseToJSON(service.getServiceAccount()));
+            jsonService.put(SERVICE_APP, ThirdPartApp.parseToJSON(service.getServiceApp()).toString());
+            jsonService.put(SERVICE_ACCOUNT, Account.parseToJSON(service.getServiceAccount()));
+            jsonService.put(SERVICE_ACCOUNTS,Account.parseToJSONArray(service.getServiceAccounts()));
             jsonService.put(SERVICE_QRCODE,service.getServiceQRCode());
         } catch (JSONException e) {
             e.printStackTrace();

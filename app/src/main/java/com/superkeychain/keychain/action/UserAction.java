@@ -68,33 +68,9 @@ public class UserAction extends Action {
 
 
     public void signIn(String username, String password, final ActionFinishedListener actionFinishedListener) {
-        /**
-         *
-         * first sign in
-         request
-         {
-         cookie:''
-         time:
-         random_token
-         random_crypt
-         cert_encrypt_rsa(rsa):{
-         time
-         username
-         password
-         device_id
-         aeskey
-         }
-         data_crypt_aes(aes):{
-         target-object
-         }
-         }
-         */
 
         if (!validateInput(username, password, true))
             return;
-//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-//        dialog.show();
-
         try {
             SecureJsonObject requestJsonObject = getRawSecureJsonObject();
             requestJsonObject.addAttribute(ACCOUNT_TYPE, user.getType());
@@ -102,12 +78,10 @@ public class UserAction extends Action {
             requestJsonObject.addSecureAttribute(PASSWORD, user.getPassword());
             requestJsonObject.addSecureAttribute(DEVICE_ID, deviceId);
             final String requestJsonString = requestJsonObject.toString();
-            Log.d("request", requestJsonString);
             new HttpsPostAsync(context).setHttpsCustomListener(new HttpsPostAsync.HttpsCustomListener() {
                 @Override
                 public Object doHttpsResponse(String response) {
                     String responseData = (String) super.doHttpsResponse(response);
-                    Log.d("response", responseData);
                     User user = null;
                     JSONObject responseJSONObject = null;
                     try {
@@ -136,8 +110,6 @@ public class UserAction extends Action {
                                 apps.add(app);
                             }
                         }
-//                        userRepository.save(user);
-                        Log.d("response", User.parseToJSON(user).toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -148,13 +120,6 @@ public class UserAction extends Action {
                 @Override
                 public void doHttpsFinished(Object user) {
                     super.doHttpsFinished(user);
-//                    dialog.dismiss();
-//                    if (user != null && user instanceof User) {
-                        /*Intent intent = new Intent(context, KeychainMain.class);
-                        intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
-                        context.startActivity(intent);*/
-//                        activity.finish();
-//                    }
                     actionFinishedListener.doFinished(statusCode, message, user);
 
                 }
@@ -169,30 +134,9 @@ public class UserAction extends Action {
     public void signUp(String username, String password, final ActionFinishedListener actionFinishedListener) {
         if (!validateInput(username, password, true))
             return;
-//        final Dialog dialog = ProgressDialogUtil.createLoadingDialog(context, "Please Wait...");
-//        dialog.show();
         try {
             SecureJsonObject requestJsonObject = getRawSecureJsonObject();
             requestJsonObject.addAttribute(ACCOUNT_TYPE, user.getType());
-                /*
-
-                sign up
-                request{
-                time
-                account_type
-                random_token
-                random_crypt
-
-                cert_crypt_rsa (rsa){
-                time
-                username
-                password
-                aeskey
-                device_id
-                sim_serial_number
-                line_1_number
-                }
-                 */
             requestJsonObject.addSecureAttribute(USERNAME, user.getName());
             requestJsonObject.addSecureAttribute(PASSWORD, user.getPassword());
             requestJsonObject.addSecureAttribute(DEVICE_ID, deviceId);
@@ -245,13 +189,6 @@ public class UserAction extends Action {
                 @Override
                 public void doHttpsFinished(Object user) {
                     super.doHttpsFinished(user);
-//                    dialog.dismiss();
-                   /* if (user != null && user instanceof User) {
-                        Intent intent = new Intent(context, KeychainMain.class);
-                        intent.putExtra(User.USER_KEY, User.parseToJSON((User) user).toString());
-                        activity.startActivity(intent);
-                        activity.finish();
-                    }*/
                     actionFinishedListener.doFinished(statusCode, message, user);
                 }
             }).execute(getURI(PROTOCOl_HTTPS, HOST, ACTION_SIGN_UP), requestJsonString, aesKey);

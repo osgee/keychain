@@ -57,7 +57,7 @@
         <activity
             android:name=".activity.ResultActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" />
+            android:theme="@style/KeyChainMain" />
 
     </application>
 
