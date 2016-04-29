@@ -110,7 +110,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         rlActionBars.add(rlBarScan);
         rlActionBars.add(rlBarMine);
         ivAccountAdd.setOnClickListener(this);
-
         initViews();
         showActionBarAt(0);
     }

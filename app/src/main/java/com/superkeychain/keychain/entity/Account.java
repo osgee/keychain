@@ -233,4 +233,25 @@ public class Account {
             }
         },
     }
+
+//    private String accountId;
+//    private AccountType accountType;
+//    private String username;
+//    private String email;
+//    private String cellphone;
+//    private String password;
+//    private User user;
+//    private ThirdPartApp app;
+
+    public void update(Account account){
+        this.accountId = account.getAccountId();
+        this.accountType = account.getAccountType();
+        this.username = account.getUsername();
+        this.email = account.getEmail();
+        this.cellphone = account.getCellphone();
+        this.password = account.getPassword();
+        this.user = account.getUser();
+        this.app = account.getApp();
+    }
+
 }

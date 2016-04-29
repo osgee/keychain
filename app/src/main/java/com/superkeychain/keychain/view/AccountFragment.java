@@ -109,7 +109,6 @@ public class AccountFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Account a = accounts.get(position);
                 Intent intent = new Intent(AccountFragment.this.getActivity(), AccountCase.class);
                 intent.putExtra(User.USER_KEY, mUser.toJSONString());
@@ -131,15 +130,15 @@ public class AccountFragment extends BaseFragment {
 
     @Override
     public void onResume() {
+        super.onResume();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
-        super.onResume();
     }
 
     public void addRefreshAccounts(Account account) {
         if (account != null && adapter != null) {
-            this.accounts.add(account);
+            this.accounts.add(0, account);
             adapter.notifyDataSetChanged();
         }
     }
@@ -172,8 +171,7 @@ public class AccountFragment extends BaseFragment {
                 }
             }
             if (isExist) {
-                this.accounts.remove(i);
-                this.accounts.add(account);
+                this.accounts.get(i).update(account);
                 adapter.notifyDataSetChanged();
             }
         }

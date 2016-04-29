@@ -2,41 +2,38 @@ package com.superkeychain.keychain.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.superkeychain.keychain.action.Action;
 import com.superkeychain.keychain.action.ActionFinishedListener;
 import com.superkeychain.keychain.action.UserServiceAction;
-import com.superkeychain.keychain.decode.DecodeThread;
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.entity.Account;
 import com.superkeychain.keychain.entity.Service;
+import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
+import com.superkeychain.keychain.utils.ImageService;
 import com.superkeychain.keychain.view.ProgressDialogUtil;
-import com.superkeychain.keychain.view.ServiceAccountArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResultActivity extends Activity implements View.OnClickListener {
 
-	private ImageView mAppImage;
+	private ImageView imgAppLogo;
     private UserServiceAction userServiceAction;
     private User user;
     private Service service;
+    private ThirdPartApp app;
 
     private ListView lvServiceAccounts;
     private Button btnSignIn;
@@ -57,7 +54,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
 
 		Bundle extras = getIntent().getExtras();
 
-		mAppImage = (ImageView) findViewById(R.id.img_app_logo);
+		imgAppLogo = (ImageView) findViewById(R.id.img_app_logo);
         btnSignIn = (Button) findViewById(R.id.btn_service_sign_in);
         btnSignUp = (Button) findViewById(R.id.btn_service_sign_up);
 
@@ -66,8 +63,18 @@ public class ResultActivity extends Activity implements View.OnClickListener {
         if (null != extras) {
             user = User.parseFromJSON(extras.getString(User.USER_KEY));
             service = Service.parseFromJSON(extras.getString(Service.SERVICE_KEY));
+            app = service.getServiceApp();
             userServiceAction = new UserServiceAction(ResultActivity.this, user);
             accounts = service.getServiceAccounts();
+
+            new ImageService(ResultActivity.this,new ImageService.TaskFinishedListener() {
+                @Override
+                public void doFinished(Bitmap bitmap) {
+                    if(bitmap!=null){
+                        imgAppLogo.setImageBitmap(bitmap);
+                    }
+                }
+            }).get(app.getAppLogoURI());
             if(accounts!=null&&accounts.size()>0){
                 accountNames = new ArrayList<>();
                 for (int i =0; i<accounts.size();i++){
@@ -76,18 +83,18 @@ public class ResultActivity extends Activity implements View.OnClickListener {
                 adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, accountNames);
                 lvServiceAccounts.setAdapter(adapter);
                 lvServiceAccounts.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-                lvServiceAccounts.setSelection(0);
                 lvServiceAccounts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         account = accounts.get(position);
-                        Toast.makeText(ResultActivity.this, "clicked" + position, Toast.LENGTH_SHORT).show();
                     }
                 });
+                lvServiceAccounts.setSelection(0);
+                account = accounts.get(0);
                 btnSignIn.setOnClickListener(this);
                 btnSignUp.setOnClickListener(this);
             }else{
-                lvServiceAccounts.setVisibility(View.GONE);
+                lvServiceAccounts.setVisibility(View.INVISIBLE);
                 btnSignIn.setVisibility(View.GONE);
                 btnSignUp.setOnClickListener(this);
             }

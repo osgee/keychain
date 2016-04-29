@@ -12,20 +12,17 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp">
         <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:scaleType="fitCenter"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
             android:id="@+id/img_app_logo"
-            android:src="@drawable/logo"
-            app:riv_border_color="@color/dark_gray"
+            app:riv_border_color="@color/white"
             app:riv_border_width="1dip"
             app:riv_corner_radius="30dip"
             app:riv_mutate_background="true"
             app:riv_oval="true"
-            app:riv_tile_mode="repeat" />
+            app:riv_tile_mode="clamp" />
     </RelativeLayout>
 
     <RelativeLayout

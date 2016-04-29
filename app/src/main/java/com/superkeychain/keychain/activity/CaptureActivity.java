@@ -43,6 +43,7 @@ import com.superkeychain.keychain.action.UserServiceAction;
 import com.superkeychain.keychain.camera.CameraManager;
 import com.superkeychain.keychain.decode.DecodeThread;
 import com.superkeychain.keychain.entity.Service;
+import com.superkeychain.keychain.entity.ThirdPartApp;
 import com.superkeychain.keychain.entity.User;
 import com.superkeychain.keychain.utils.BeepManager;
 import com.superkeychain.keychain.utils.CaptureActivityHandler;
@@ -211,11 +212,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             userServiceAction.queryService(new ActionFinishedListener() {
                 @Override
                 public void doFinished(int status, String message, Object object) {
-                    dialog.dismiss();
+					dialog.dismiss();
                     if (status == Action.STATUS_CODE_OK) {
                         Service service = (Service) object;
                         bundle.putString(User.USER_KEY, user.toJSONString());
-                        bundle.putString(Service.SERVICE_KEY, service.toJSONString());
+						bundle.putString(Service.SERVICE_KEY, service.toJSONString());
                         startActivity(new Intent(CaptureActivity.this, ResultActivity.class).putExtras(bundle));
                     } else {
                         Toast.makeText(CaptureActivity.this, String.valueOf(status), Toast.LENGTH_SHORT).show();
@@ -223,6 +224,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
                             handler.sendEmptyMessageDelayed(R.id.restart_preview, 1000);
                         }
                     }
+					dialog.dismiss();
                 }
             }, serviceId);
         }
