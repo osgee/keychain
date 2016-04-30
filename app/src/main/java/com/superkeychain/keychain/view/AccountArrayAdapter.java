@@ -2,6 +2,7 @@ package com.superkeychain.keychain.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.entity.Account;
@@ -28,24 +30,30 @@ public class AccountArrayAdapter extends BaseAdapter {
     Activity activity;
     List<AccountHolder> accountHolders;
 
-    View convertView;
+    List<View> convertViews;
 
     List<Account> accounts;
     private LayoutInflater mInflater;
     private int resId;
 
-    public AccountArrayAdapter(Activity activity, int resId, List<Account> accounts) {
+    public AccountArrayAdapter(final Activity activity, int resId, List<Account> accounts) {
         this.accounts = accounts;
         this.activity = activity;
         this.resId = resId;
         mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         accountHolders = new ArrayList<>();
+        convertViews = new ArrayList<>();
+        this.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                refreshAll();
+            }
+        });
     }
 
     @Override
     public int getCount() {
-
-//        return accounts.size();
         return accounts.size();
     }
 
@@ -56,7 +64,7 @@ public class AccountArrayAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return 100l;
+        return accounts.get(position).hashCode();
     }
 
     @Override
@@ -65,31 +73,8 @@ public class AccountArrayAdapter extends BaseAdapter {
             AccountHolder accountHolder = new AccountHolder();
             accountHolders.add(accountHolder);
             convertView = mInflater.inflate(resId, null);
-            this.convertView = convertView;
-            accountHolder.ivAppLogo = (ImageView) convertView.findViewById(R.id.iv_app_logo);
-            accountHolder.tvAccountName = (TextView) convertView.findViewById(R.id.tv_account_name);
-            accountHolder.tvAccountPassword = (TextView) convertView.findViewById(R.id.tv_password);
-            accountHolder.rlShowPassword = (RelativeLayout) convertView.findViewById(R.id.rl_show_password);
-            accountHolder.btnLock = (Button) convertView.findViewById(R.id.btn_lock);
-            accountHolder.tvAccountName.setText(accounts.get(position).toString());
-            accountHolder.tvAccountPassword.setText("******");
-            accountHolder.account = accounts.get(position);
-            refreshLogo(position);
-            final AccountHolder finalAccountHolder = accountHolder;
-            final String finalPassword = accounts.get(position).getPassword();
-            accountHolder.btnLock.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        finalAccountHolder.tvAccountPassword.setText(finalPassword);
-                        finalAccountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_open);
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        finalAccountHolder.tvAccountPassword.setText("******");
-                        finalAccountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_closed);
-                    }
-                    return false;
-                }
-            });
+            convertViews.add(convertView);
+            refresh(position);
         }
         return convertView;
     }
@@ -103,33 +88,50 @@ public class AccountArrayAdapter extends BaseAdapter {
         public Account account;
     }
 
-    public void refreshLogo(int position){
+    public void refresh(int position){
         if(accountHolders==null||accountHolders.size()==0)
             return;
         else{
-            final AccountHolder finalAccountHolder1 = accountHolders.get(position);
+            View convertView = convertViews.get(position);
+            final AccountHolder accountHolder = accountHolders.get(position);
+            accountHolder.ivAppLogo = (ImageView) convertView.findViewById(R.id.iv_app_logo);
+            accountHolder.tvAccountName = (TextView) convertView.findViewById(R.id.tv_account_name);
+            accountHolder.tvAccountPassword = (TextView) convertView.findViewById(R.id.tv_password);
+            accountHolder.rlShowPassword = (RelativeLayout) convertView.findViewById(R.id.rl_show_password);
+            accountHolder.btnLock = (Button) convertView.findViewById(R.id.btn_lock);
+            accountHolder.tvAccountName.setText(accounts.get(position).toString());
+            accountHolder.tvAccountPassword.setText("******");
+            accountHolder.account = accounts.get(position);
             new ImageService(activity, new ImageService.TaskFinishedListener() {
                 @Override
                 public void doFinished(Bitmap bitmap) {
                     if(bitmap!=null)
-                        finalAccountHolder1.ivAppLogo.setImageBitmap(bitmap);
+                        accountHolder.ivAppLogo.setImageBitmap(bitmap);
                 }
-            }).get(accountHolders.get(position).account.getApp().getAppLogoURI());
+            }).get(accountHolder.account.getApp().getAppLogoURI());
+
+            final String finalPassword = accountHolder.account.getPassword();
+            accountHolder.btnLock.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        accountHolder.tvAccountPassword.setText(finalPassword);
+                        accountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_open);
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        accountHolder.tvAccountPassword.setText("******");
+                        accountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_closed);
+                    }
+                    return false;
+                }
+            });
         }
 
     }
 
-    public void refreshAllLogo(){
+    public void refreshAll(){
         for (int i=0; i<accounts.size(); i++){
-            refreshLogo(i);
+            refresh(i);
         }
     }
-
-    @Override
-    public void notifyDataSetChanged() {
-        super.notifyDataSetChanged();
-        refreshAllLogo();
-    }
-
 
 }

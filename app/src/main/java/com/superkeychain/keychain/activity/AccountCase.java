@@ -343,7 +343,7 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
     }
 
     private void deleteAccount() {
-        if (mode == MODE_REVISE) {
+        if (mode == MODE_REVISE && validateInput(false)) {
             btnAccountDelete.setClickable(false);
             final Dialog dialog = ProgressDialogUtil.createLoadingDialog(AccountCase.this, "Please Wait...");
             dialog.show();

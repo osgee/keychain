@@ -3,6 +3,7 @@ package com.superkeychain.keychain.view;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -128,17 +129,10 @@ public class AccountFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-    }
 
     public void addRefreshAccounts(Account account) {
         if (account != null && adapter != null) {
-            this.accounts.add(0, account);
+            this.accounts.add(account);
             adapter.notifyDataSetChanged();
         }
     }
