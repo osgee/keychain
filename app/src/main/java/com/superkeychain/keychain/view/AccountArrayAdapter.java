@@ -34,7 +34,7 @@ public class AccountArrayAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private int resId;
 
-    public AccountArrayAdapter(final Activity activity, int resId, List<Account> accounts) {
+    public AccountArrayAdapter(final Activity activity, int resId, final List<Account> accounts) {
         this.accounts = accounts;
         this.activity = activity;
         this.resId = resId;
@@ -43,11 +43,8 @@ public class AccountArrayAdapter extends BaseAdapter {
         this.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                refreshAll();
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                synchronized (accounts){
+                    refreshAll();
                 }
             }
         });
@@ -102,7 +99,7 @@ public class AccountArrayAdapter extends BaseAdapter {
         accountHolder.tvAccountPassword = (TextView) view.findViewById(R.id.tv_password);
         accountHolder.rlShowPassword = (RelativeLayout) view.findViewById(R.id.rl_show_password);
         accountHolder.btnLock = (Button) view.findViewById(R.id.btn_lock);
-        accountHolder.tvAccountName.setText(accountHolder.account.toString());
+        accountHolder.tvAccountName.setText(accountHolder.account.getUsername());
         accountHolder.tvAccountPassword.setText("******");
         new ImageService(activity, new ImageService.TaskFinishedListener() {
             @Override

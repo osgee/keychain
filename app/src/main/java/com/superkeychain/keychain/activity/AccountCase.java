@@ -429,7 +429,6 @@ public class AccountCase extends AppCompatActivity implements View.OnClickListen
             account.setUsername(username);
             account.setPassword(password);
             account.setUser(user);
-            Log.d("selected", "" + spinnerApps.getSelectedItemPosition());
             if (apps != null)
                 account.setApp(apps.get(spinnerApps.getSelectedItemPosition()));
 

@@ -1,5 +1,7 @@
 package com.superkeychain.keychain.entity;
 
+import com.superkeychain.keychain.utils.InputValidateUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -233,6 +235,7 @@ public class Account {
             }
         },
     }
+
 
 //    private String accountId;
 //    private AccountType accountType;

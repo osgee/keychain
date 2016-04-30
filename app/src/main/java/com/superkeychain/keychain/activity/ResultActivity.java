@@ -78,7 +78,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
             if(accounts!=null&&accounts.size()>0){
                 accountNames = new ArrayList<>();
                 for (int i =0; i<accounts.size();i++){
-                    accountNames.add(accounts.get(i).toString());
+                    accountNames.add(accounts.get(i).getUsername());
                 }
                 adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, accountNames);
                 lvServiceAccounts.setAdapter(adapter);
