@@ -30,8 +30,6 @@ public class AccountArrayAdapter extends BaseAdapter {
     Activity activity;
     List<AccountHolder> accountHolders;
 
-    List<View> convertViews;
-
     List<Account> accounts;
     private LayoutInflater mInflater;
     private int resId;
@@ -42,12 +40,15 @@ public class AccountArrayAdapter extends BaseAdapter {
         this.resId = resId;
         mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         accountHolders = new ArrayList<>();
-        convertViews = new ArrayList<>();
         this.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
-                super.onChanged();
                 refreshAll();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -69,12 +70,13 @@ public class AccountArrayAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView==null) {
+        if(convertView == null) {
             AccountHolder accountHolder = new AccountHolder();
-            accountHolders.add(accountHolder);
             convertView = mInflater.inflate(resId, null);
-            convertViews.add(convertView);
-            refresh(position);
+            accountHolder.view = convertView;
+            accountHolder.account = (Account) getItem(position);
+            accountHolders.add(accountHolder);
+            refresh(convertView, accountHolder);
         }
         return convertView;
     }
@@ -86,50 +88,50 @@ public class AccountArrayAdapter extends BaseAdapter {
         public RelativeLayout rlShowPassword;
         public Button btnLock;
         public Account account;
+        public View view;
     }
 
-    public void refresh(int position){
-        if(accountHolders==null||accountHolders.size()==0)
-            return;
-        else{
-            View convertView = convertViews.get(position);
-            final AccountHolder accountHolder = accountHolders.get(position);
-            accountHolder.ivAppLogo = (ImageView) convertView.findViewById(R.id.iv_app_logo);
-            accountHolder.tvAccountName = (TextView) convertView.findViewById(R.id.tv_account_name);
-            accountHolder.tvAccountPassword = (TextView) convertView.findViewById(R.id.tv_password);
-            accountHolder.rlShowPassword = (RelativeLayout) convertView.findViewById(R.id.rl_show_password);
-            accountHolder.btnLock = (Button) convertView.findViewById(R.id.btn_lock);
-            accountHolder.tvAccountName.setText(accounts.get(position).toString());
-            accountHolder.tvAccountPassword.setText("******");
-            accountHolder.account = accounts.get(position);
-            new ImageService(activity, new ImageService.TaskFinishedListener() {
-                @Override
-                public void doFinished(Bitmap bitmap) {
-                    if(bitmap!=null)
-                        accountHolder.ivAppLogo.setImageBitmap(bitmap);
-                }
-            }).get(accountHolder.account.getApp().getAppLogoURI());
+    public void refresh(int position) {
+        if(position<accountHolders.size())
+        refresh(accountHolders.get(position).view, accountHolders.get(position));
+    }
 
-            final String finalPassword = accountHolder.account.getPassword();
-            accountHolder.btnLock.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        accountHolder.tvAccountPassword.setText(finalPassword);
-                        accountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_open);
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        accountHolder.tvAccountPassword.setText("******");
-                        accountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_closed);
-                    }
-                    return false;
+    public void refresh(View view, final AccountHolder accountHolder){
+        accountHolder.ivAppLogo = (ImageView) view.findViewById(R.id.iv_app_logo);
+        accountHolder.tvAccountName = (TextView) view.findViewById(R.id.tv_account_name);
+        accountHolder.tvAccountPassword = (TextView) view.findViewById(R.id.tv_password);
+        accountHolder.rlShowPassword = (RelativeLayout) view.findViewById(R.id.rl_show_password);
+        accountHolder.btnLock = (Button) view.findViewById(R.id.btn_lock);
+        accountHolder.tvAccountName.setText(accountHolder.account.toString());
+        accountHolder.tvAccountPassword.setText("******");
+        new ImageService(activity, new ImageService.TaskFinishedListener() {
+            @Override
+            public void doFinished(Bitmap bitmap) {
+                if(bitmap!=null)
+                    accountHolder.ivAppLogo.setImageBitmap(bitmap);
+            }
+        }).get(accountHolder.account.getApp().getAppLogoURI());
+
+        final String finalPassword = accountHolder.account.getPassword();
+        accountHolder.btnLock.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    accountHolder.tvAccountPassword.setText(finalPassword);
+                    accountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_open);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    accountHolder.tvAccountPassword.setText("******");
+                    accountHolder.btnLock.setBackgroundResource(R.mipmap.ic_action_eye_closed);
                 }
-            });
-        }
+                return false;
+            }
+        });
+
 
     }
 
     public void refreshAll(){
-        for (int i=0; i<accounts.size(); i++){
+        for (int i=0; i<getCount(); i++){
             refresh(i);
         }
     }

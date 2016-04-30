@@ -8,26 +8,21 @@
             android:layout_width="fill_parent"
             android:layout_height="100dp"
             android:layout_margin="0dp"
-            android:paddingStart="0dp"
+            android:paddingStart="12dp"
             android:paddingEnd="0dp"
             android:id="@+id/rl_mine_info"
             android:background="@color/sky_blue">
             <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="0dp"
                 android:scaleType="fitCenter"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
                 android:src="@drawable/logo"
-                app:riv_border_color="@color/sky_blue"
-                app:riv_border_width="1dip"
-                app:riv_corner_radius="30dip"
                 app:riv_mutate_background="true"
                 app:riv_oval="true"
-                app:riv_tile_mode="repeat" />
+                app:riv_tile_mode="clamp" />
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -57,9 +52,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingLeft="0dp"
             android:layout_below="@+id/rl_mine_info">
-
-
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -101,12 +95,6 @@
                                 android:textSize="16dp"
                                 android:layout_marginLeft="60dp"
                                 android:textAlignment="center" />
-                            <ToggleButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/tb_notification"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginRight="16dp"/>
                         </RelativeLayout>
                         <RelativeLayout
                             android:layout_width="match_parent"

@@ -78,9 +78,6 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         } else {
             userAccountAction = new UserAccountAction(this, user);
             userAppAction = new UserAppAction(this);
-            Long cookieExpireTime = user.getCookieExpireTime();
-            Long now = Calendar.getInstance().getTimeInMillis() / 1000;
-            Log.d("cookieTime", cookieExpireTime + ":" + now);
             userAction.checkCookie(new ActionFinishedListener() {
                 @Override
                 public void doFinished(int status, String message, Object user) {
@@ -312,8 +309,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
     @Override
     public void onScanFragmentInteraction(View view) {
         switch (view.getId()){
-
-            case R.id.rl_scan:
+            case R.id.btn_scan:
                 Intent openCameraIntent = new Intent(KeychainMain.this, CaptureActivity.class);
                 openCameraIntent.putExtra(User.USER_KEY, user.toJSONString());
                 startActivity(openCameraIntent);

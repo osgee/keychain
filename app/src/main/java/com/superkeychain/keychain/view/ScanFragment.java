@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.superkeychain.keychain.R;
@@ -27,7 +28,7 @@ public class ScanFragment extends BaseFragment {
     private String mJsonUser;
     private User user;
 
-    private RelativeLayout rlScan;
+    private Button btnScan;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,8 +65,8 @@ public class ScanFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
-        rlScan = (RelativeLayout)view.findViewById(R.id.rl_scan);
-        rlScan.setOnClickListener(new View.OnClickListener() {
+        btnScan = (Button)view.findViewById(R.id.btn_scan);
+        btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onButtonPressed(v);
