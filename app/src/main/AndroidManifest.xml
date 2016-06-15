@@ -58,6 +58,10 @@
             android:name=".activity.ResultActivity"
             android:screenOrientation="portrait"
             android:theme="@style/KeyChainMain" />
+        <activity
+            android:name=".activity.GraphicPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/KeyChainMain" />
 
     </application>
 

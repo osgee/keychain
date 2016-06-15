@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.superkeychain.keychain.R;
 import com.superkeychain.keychain.entity.User;
@@ -29,6 +30,8 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
+    private TextView tvUsername;
+
     public MineFragment() {
         // Required empty public constructor
     }
@@ -40,7 +43,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
      * @param jsonUser Parameter 1
      * @return A new instance of fragment MineFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static MineFragment newInstance(String jsonUser) {
         MineFragment fragment = new MineFragment();
         Bundle args = new Bundle();
@@ -67,10 +69,13 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
         btnSignOut.setOnClickListener(this);
         RelativeLayout rlMineInfo = (RelativeLayout) view.findViewById(R.id.rl_mine_info);
         rlMineInfo.setOnClickListener(this);
+        RelativeLayout rlMinePattern = (RelativeLayout) view.findViewById(R.id.rl_pattern);
+        rlMinePattern.setOnClickListener(this);
+        tvUsername = (TextView) view.findViewById(R.id.tv_user_name);
+        tvUsername.setText(user.getAccountName());
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onPressed(View view) {
         if (mListener != null) {
             mListener.onMineFragmentInteraction(view);
@@ -110,7 +115,6 @@ public class MineFragment extends BaseFragment implements View.OnClickListener {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onMineFragmentInteraction(View view);
     }
 

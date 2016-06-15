@@ -23,7 +23,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
@@ -31,7 +30,6 @@ dependencies {
     compile 'in.srain.cube:cube-sdk:1.0.44@aar'
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile files('libs/zxing.jar')
-//    testCompile 'junit:junit:4.12'
-//    releaseCompile project(':zXingProj')
-    //    compile 'me.dm7.barcodescanner:zxing:1.8.4'
+
 }
+

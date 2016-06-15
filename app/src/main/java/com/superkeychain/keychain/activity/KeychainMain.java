@@ -2,8 +2,10 @@ package com.superkeychain.keychain.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -53,12 +55,27 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
 
     private List<RelativeLayout> rlActionBars = new ArrayList<>();
 
+    private SharedPreferences preferences;
+
+    private static String password;
+
+    private static boolean isPassword = false;
+    private static boolean isPasswordEnabled = false;
+
+    private static final String IS_PASSWORD_ENABLED = "is_password_enabled";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userRepository = new UserRepository(this);
-
+        preferences = this.getPreferences(MODE_PRIVATE);
+        isPasswordEnabled = preferences.getBoolean(IS_PASSWORD_ENABLED, false);
+        if(isPasswordEnabled){
+            Intent gpIntent = new Intent(KeychainMain.this, GraphicPasswordActivity.class);
+            startActivityForResult(gpIntent, GraphicPasswordActivity.CHECK);
+        }
+        if(isPasswordEnabled&&isPassword)
+            userRepository.setPassword(password);
         Intent intentFromSignIn = getIntent();
         String userJson = intentFromSignIn.getStringExtra(User.USER_KEY);
         User user = null;
@@ -110,6 +127,8 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
         initViews();
         showActionBarAt(0);
     }
+
+
 
     public void showActionBarAt(int i) {
         for (int j = 0; j < rlActionBars.size(); j++) {
@@ -212,6 +231,7 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
 
     @Override
     public void onMineFragmentInteraction(View view) {
+        Intent intent = null;
         switch (view.getId()) {
             case R.id.btn_sign_out:
                 userAction.signOut(new ActionFinishedListener() {
@@ -220,12 +240,17 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
                     }
                 });
                 userRepository.delete();
-                Intent intent = new Intent(KeychainMain.this, SignIn.class);
+                intent = new Intent(KeychainMain.this, SignIn.class);
                 startActivity(intent);
                 finish();
                 break;
             case R.id.rl_mine_info:
                 Toast.makeText(KeychainMain.this, "not implemented yet", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.rl_pattern:
+                intent = new Intent(KeychainMain.this, GraphicPasswordActivity.class);
+                intent.putExtra(GraphicPasswordActivity.MODE, GraphicPasswordActivity.SAVE);
+                startActivityForResult(intent, GraphicPasswordActivity.SAVE);
                 break;
             default:
                 break;
@@ -262,6 +287,24 @@ public class KeychainMain extends FragmentActivity implements MineFragment.OnFra
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
+            case GraphicPasswordActivity.SUCCEED:
+                password = data.getStringExtra(GraphicPasswordActivity.PASSWORD);
+                isPassword = true;
+                if(requestCode==GraphicPasswordActivity.SAVE){
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(IS_PASSWORD_ENABLED, true);
+                    editor.apply();
+                }
+                break;
+            case GraphicPasswordActivity.FAILED:
+                isPassword = false;
+                if(requestCode==GraphicPasswordActivity.CHECK){
+                    userRepository.delete();
+                    Intent intent = new Intent(KeychainMain.this, SignIn.class);
+                    startActivity(intent);
+                    finish();
+                }
+                break;
             case AccountCase.ACCOUNT_CASE_ADD_SUCCEED:
                 Account accountAdd = Account.parseFromJSON(data.getStringExtra(Account.ACCOUNT_KEY));
                 if (accountAdd != null) {

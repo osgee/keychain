@@ -229,7 +229,7 @@ public class IconTabPageIndicator extends LinearLayout implements PageIndicator 
         /**
          * Callback when the selected tab has been reselected.
          *
-         * @param position Position of the current center item.
+         * @param position Position of the current center graphic_password_item.
          */
         void onTabReselected(int position);
     }

@@ -5,7 +5,7 @@
 
     <style name="KeyChainMain" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<graphic_password_item name="android:windowNoTitle">true</graphic_password_item>-->
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
 

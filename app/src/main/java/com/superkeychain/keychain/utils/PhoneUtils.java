@@ -72,7 +72,7 @@ public class PhoneUtils {
     }
 
     public String getUniqueString(String pattern) {
-        Log.d("uniqueString", getIMEI() + getSimSerialNumber() + getLine1Number() + getDeviceSoftwareVersion() + pattern);
+//        Log.d("uniqueString", getIMEI() + getSimSerialNumber() + getLine1Number() + getDeviceSoftwareVersion() + pattern);
         return Digest.Builder.bySHA256().getDigest(getIMEI() + getSimSerialNumber() + getLine1Number() + getDeviceSoftwareVersion() + pattern);
     }
 }
