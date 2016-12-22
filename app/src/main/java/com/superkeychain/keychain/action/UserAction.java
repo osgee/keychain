@@ -144,7 +144,7 @@ public class UserAction extends Action {
             requestJsonObject.addSecureAttribute(LINE_1_NUMBER, line_1_number);
 
             final String requestJsonString = requestJsonObject.toString();
-            Log.d("request", requestJsonString);
+//            Log.d("request", requestJsonString);
             new HttpsPostAsync(context).setHttpsCustomListener(new HttpsPostAsync.HttpsCustomListener() {
 
                 @Override

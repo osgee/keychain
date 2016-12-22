@@ -114,6 +114,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
                         dialog.dismiss();
                         if(status==Action.STATUS_CODE_OK){
                             Toast.makeText(ResultActivity.this,"Sign In Succeed!",Toast.LENGTH_SHORT).show();
+                            finish();
                         }
 //                        ResultActivity.this.finish();
                     }
